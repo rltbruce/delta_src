@@ -1,0 +1,182 @@
+<div id="formsclient" class="page-layout simple fullwidth" fxLayout="column">
+
+    <!-- HEADER -->
+    <div class="header accent p-24 h-60" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="secondary-text s-18">home</mat-icon>
+                <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+                <span class="secondary-text">Debours</span>
+            </div>
+            <!--div class="h1 mt-16">Forms</div-->
+        </div>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+			<div>
+	            <button mat-raised-button type="button" color="accent" (click)="ajouter()" style="width: 10%;">
+	                Nouveau
+	            </button>
+	            <button mat-raised-button type="button" color="primary" (click)="modifier()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Modifier
+	            </button>
+	            <button mat-raised-button type="button" color="warn" (click)="supprimer()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Supprimer
+	            </button>
+	        </div><br>
+	        <div>
+	        <mat-tab-group *ngIf="afficherFormAjoutModif">
+                 <mat-tab label="Formulaire">
+                 <!--Debut-->
+                 <div class="divform" >
+                                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                        <div class="centerinput">
+                                            
+								        <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Code</mat-label>
+                                            <input matInput formControlName="code" [(ngModel)]="debours.code">
+                                            <mat-error>
+                                                Code obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+                        
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Libellé</mat-label>
+                                            <input matInput formControlName="libelle" [(ngModel)]="debours.libelle">
+                                            <mat-error>
+                                                Libellé obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+                        
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Nature</mat-label>
+                                            <input  matInput formControlName="nature" [(ngModel)]="debours.nature">
+                                            <mat-error>
+                                                Nature obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+                        
+                                        <!--mat-form-field fxFlex="100" class="pl-4">
+                                            <mat-label>Type de debours</mat-label-->
+                                            
+                                            <!--input matInput  formControlName="type_deb" [(ngModel)]="debours.type_deb" -->
+                                            <mat-label fxFlex="100">Individuel</mat-label>
+                                            <mat-checkbox  name="chk" style="margin-top: 30px;margin-right:10px;" (change)="checkclick(debours)" [checked]="debours.type_deb == 1" 
+                                            ></mat-checkbox>
+                                            
+                                            <!--input  matInput formControlName="type_deb" >
+                                            
+                                          
+                                        </mat-form-field-->
+                                        
+                                       
+                                    </div>
+                                    <div>
+                                        <!--mat-label>Type de debours</mat-label>
+                                        <mat-checkbox (click)="toggleSelectAll()" [checked]="1"
+                                        [indeterminate]="0"></mat-checkbox-->
+                                      
+                                    </div>
+                                    <div class="centerinput">
+                                        <!--mat-form-field  fxFlex="100" class="pl-4">
+                                            <mat-label>Unitaire</mat-label>
+                                            <input matInput formControlName="unitaire" [(ngModel)]="debours.fax">
+                                           
+                                        </mat-form-field-->
+                                        </div>
+                                      
+                                   
+                                        <!--div class="terms" fxLayout="row" fxLayoutAlign="center center">
+                                            <mat-checkbox name="terms" checked="true" aria-label="I read and accept" required>
+                                                <span>I read and accept</span>
+                                            </mat-checkbox>
+                                        
+                                            <a href="#">terms and conditions</a>
+                                        </div-->
+                                    <div fxLayout="row" fxLayoutAlign="start start">
+                                        <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                            [disabled]="deboursForm.invalid">
+                                            Enregistrer
+                                        </button>
+                                        <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                            ANNULER
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                 <!--Fin-->
+                 </mat-tab>
+             </mat-tab-group>
+             </div><br>
+             <input
+             type="text"
+             style="padding:8px;margin:15px auto;width:30%;"
+             placeholder="Entrer la valeur pour filtrer..."
+             (keyup)="updateFilter($event)"
+           />	
+       	    
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="rows_debours"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="48"
+                            [footerHeight]="56"
+                            [rowHeight]="'auto'"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectdebours($event)'
+                            [limit]="10">
+                            
+                         
+                            <ngx-datatable-column name="Code">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.code}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Libellé">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.libelle}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                              <ngx-datatable-column name="Individuel">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   <input type="checkbox" name="type_deb" [disabled]="true" [checked]="row.type_deb == '1'" value="{{row.typedeb}}">
+                                  <!--{{row.type_deb}}-->
+                                </ng-template>
+                              </ngx-datatable-column> 
+                              <ngx-datatable-column name="Nature">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.nature}}
+                                </ng-template>
+                              </ngx-datatable-column> 
+
+                        </ngx-datatable>
+                      </div><br> 
+                    
+                        
+    </div>
+     <ng-template #suppressionDialog>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  </div>  
+
+
+       

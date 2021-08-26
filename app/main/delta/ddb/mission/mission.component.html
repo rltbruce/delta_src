@@ -1,0 +1,558 @@
+<div id="formsclient" class="page-layout simple fullwidth" fxLayout="column">
+
+    <!-- HEADER -->
+    <div class="header accent p-24 h-20" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="secondary-text s-18">home</mat-icon>
+                <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+                <span class="secondary-text">Contrat et mission</span>
+            </div>
+            <!--div class="h1 mt-16">Forms</div-->
+        </div>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div>
+        <form name="clientForm" [formGroup]="clientForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+        <mat-form-field  fxFlex="100" class="pl-4" appearance="outline" fxFlex style="width:320px;margin-top:10px;height:20px;">
+            <mat-label>Client</mat-label>
+        
+            <mat-select (selectionChange)="changeclient($event)" formControlName="id" required>
+               
+                <mat-option *ngFor="let grd of row_client" [value]="grd.id">
+                    {{grd.nom_client}}
+                </mat-option>
+             </mat-select>   
+        </mat-form-field>
+    </form>
+    </div>
+   
+   
+    <div class="content">
+			<div>
+	            <button mat-raised-button type="button" color="accent" (click)="ajouter()" style="width: 10%;">
+	                Nouveau
+	            </button>
+	            <button mat-raised-button type="button" color="primary" (click)="modifier()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Modifier
+	            </button>
+	            <button mat-raised-button type="button" color="warn" (click)="supprimer()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Supprimer
+	            </button>
+	        </div>
+	        <div>
+	        <mat-tab-group *ngIf="afficherFormAjoutModif">
+                 <mat-tab label="Formulaire Contrat">
+                 <!--Debut-->
+                 
+                 <div class="divform" >
+                                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                        <div class="centerinput">
+                                            
+								        <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Numero du Contrat</mat-label>
+                                            <input matInput formControlName="num_contrat" [(ngModel)]="debours.num_contrat">
+                                            <mat-error>
+                                                Numero obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+                        
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Libellé</mat-label>
+                                            <input matInput formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                                            <mat-error>
+                                                Date contrat
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                    </div>
+                                    <div>
+                                        <!--mat-label>Type de debours</mat-label>
+                                        <mat-checkbox (click)="toggleSelectAll()" [checked]="1"
+                                        [indeterminate]="0"></mat-checkbox-->
+                                      
+                                    </div>
+                                    <div class="centerinput">
+                                        <!--mat-form-field  fxFlex="100" class="pl-4">
+                                            <mat-label>Unitaire</mat-label>
+                                            <input matInput formControlName="unitaire" [(ngModel)]="debours.fax">
+                                           
+                                        </mat-form-field-->
+                                        </div>
+                                      
+                                   
+                                        <!--div class="terms" fxLayout="row" fxLayoutAlign="center center">
+                                            <mat-checkbox name="terms" checked="true" aria-label="I read and accept" required>
+                                                <span>I read and accept</span>
+                                            </mat-checkbox>
+                                        
+                                            <a href="#">terms and conditions</a>
+                                        </div-->
+                                    <div fxLayout="row" fxLayoutAlign="start start">
+                                        <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                            [disabled]="deboursForm.invalid">
+                                            Enregistrer
+                                        </button>
+                                        <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                            ANNULER
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                            
+                 <!--Fin-->
+                 </mat-tab>
+             </mat-tab-group>
+
+             <mat-tab-group *ngIf="afficherFormproduit">
+                <mat-tab label="Formulaire Produit">
+                <!--Debut-->
+                <div class="divform" >
+                                   <form name="deboursForm2" [formGroup]="deboursForm2" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                       <div class="centerinput">
+                                           
+                                       <input type="hidden" formControlName="id" [(ngModel)]="produit.id">
+                                       <mat-form-field  fxFlex="100" class="pl-4" >
+                                           <mat-label>Code</mat-label>
+                                           <input matInput formControlName="code" [(ngModel)]="produit.code">
+                                           <mat-error>
+                                               Code obligatoire
+                                           </mat-error>
+                                       </mat-form-field>
+                       
+                                       <mat-form-field  fxFlex="100" class="pl-4" >
+                                           <mat-label>Libellé</mat-label>
+                                           <input matInput formControlName="libelle" [(ngModel)]="produit.libelle">
+                                           <mat-error>
+                                               Libellé obligatoire
+                                           </mat-error>
+                                       </mat-form-field>
+   
+                                   </div>
+                                 
+                                                                  
+                                  
+                                     
+                                   <div fxLayout="row" fxLayoutAlign="start start">
+                                       <button (click)="ajout_produit(produit,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                           [disabled]="deboursForm2.invalid">
+                                           Enregistrer
+                                       </button>
+                                       <button (click)="annuler_produit()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                           ANNULER
+                                       </button>
+                                   </div>
+                                   </form>
+                               </div>
+                <!--Fin-->
+                </mat-tab>
+            </mat-tab-group>
+            <!--div>
+                <mat-form-field class="example-full-width" appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+            </div-->
+             </div>
+             <input
+             type="text"
+             style="padding:8px;margin:15px auto;width:30%;"
+             placeholder="Entrer la valeur pour filtrer..."
+             (keyup)="updateFilter($event)"
+           />	
+           <div>
+            <span class="secondary-text" style="margin-left:20px"><b> Contrat </b></span>
+           </div>
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="row_type"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="5"
+                            [footerHeight]="25"
+                            [rowHeight]="35"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectdebours($event)'
+                            [limit]="5"
+                            style="margin-right:250px;margin-left:20px !important">
+                            
+                         
+                            <ngx-datatable-column name="Code" [flexGrow]="1" [minWidth]="20" [maxWidth]= "140" style="vertical-align:middle;font-size:10">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.num_contrat}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Date du contrat" [flexGrow]="1" [minWidth]="20" [maxWidth]= "540">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.date_contrat}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                            
+                             
+
+                        </ngx-datatable>
+                      </div><br> 
+                      <div>
+                        <button mat-raised-button type="button" color="accent" (click)="ajouter_produit()"  *ngIf="afficherboutonModifSupr" style="width: 10%;">
+                            Nouveau
+                        </button>
+                        <button mat-raised-button type="button" color="primary" (click)="modifier_produit()" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                            Modifier
+                        </button>
+                        <button mat-raised-button type="button" color="warn" (click)="supprimer_produit()" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                            Supprimer
+                        </button>
+                    </div>
+                    <div>
+                       
+                       </div>
+                       <mat-tab-group>
+                       <mat-tab label="Mission">    
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="row_prd"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="5"
+                            [footerHeight]="25"
+                            [rowHeight]="'35'"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected_m"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectproduit($event)'
+                            [limit]="10"
+                            style="margin-right:250px;margin-left:20px !important">
+                            
+                         
+                            <ngx-datatable-column name="Code">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.code}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Libellé">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.libelle}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                             
+                             
+
+                        </ngx-datatable>
+                      </div><br> 
+                    </mat-tab>
+                    <mat-tab label="Prevision Honoraire"> 
+                        <div>
+                            <ngx-datatable
+                               #table
+                                class="material"
+                                [rows]="row_prevhn"
+                                [loadingIndicator]="loadingIndicator"
+                                [columns]="columns_hn"
+                                [columnMode]="'force'"
+                                [headerHeight]="5"
+                                [footerHeight]="25"
+                                [rowHeight]="'35'"
+                                [scrollbarH]="true"
+                                [reorderable]="reorderable"
+                                [selected]="selected_phn"
+                                [selectionType]="'single'"
+                                (activate)="onActivate($event)"
+                               
+                                [limit]="10"
+                                style="margin-right:200px;margin-left:20px !important">
+                                
+                             
+                                <ngx-datatable-column name="Intervenants">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                      {{row.libgrade}}
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                
+                                  <ngx-datatable-column name="Nombre jour" fxFlex="30" class="pl-4"  fxFlex style="width:120px;">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                       {{row.nbre_jour}}
+                                    </ng-template>
+                                  </ngx-datatable-column> 
+                                  <ngx-datatable-column name="Jour/Homme" style="width:120px">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                       {{row.nbre_homme}}
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                  <ngx-datatable-column name="Nombre heure" style="width:120px">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                       {{row.nbre_heure}}
+                                    </ng-template>
+                                  </ngx-datatable-column>  
+                                  <ngx-datatable-column name="Duree totale" style="width:120px">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                       {{row.nbre_jour*row.nbre_homme}}
+                                    </ng-template>
+                                  </ngx-datatable-column>  
+                                  <ngx-datatable-column name="Prix Unitaire">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                       {{(row.pu*1)|number }}
+                                    </ng-template>
+                                  </ngx-datatable-column>
+                                 
+                                 
+    
+                            </ngx-datatable>
+                          </div><br>    
+                    </mat-tab>  
+                    <mat-tab label="Prevision Debours">    
+                    </mat-tab>    
+                    <mat-tab label="Prevision Tache">    
+                    </mat-tab>  
+                    </mat-tab-group>
+                    
+                        
+    </div>
+    <div>
+     <ng-template #suppressionDialog>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement produit?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_produit()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+    </div>
+   <div> 
+  <ng-template #suppressionDialog1>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement type ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+
+  <ng-template #saisieDialog >
+    <p><b>Formulaire du Contrat</b></p>
+    <div class="divform" >
+        <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+          <div class="centerinput">
+            <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                <mat-label>Numero du Contrat</mat-label>
+                <input matInput formControlName="num_contrat" [(ngModel)]="debours.num_contrat">
+                <mat-error>
+                    Numero obligatoire
+                </mat-error>
+            </mat-form-field>
+           
+            
+               <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                    <mat-label>Date du contrat</mat-label>
+                    <input matInput formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                    <mat-error>
+                        Date obligatoire
+                    </mat-error>
+                </mat-form-field-->
+
+                <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                    <mat-label>Date du contrat</mat-label>
+                    <input matInput [matDatepicker]="startDatePicker" name="start" formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                </mat-form-field-->
+
+
+                <mat-form-field fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                    <mat-label>Date du contrat</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                      <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                    </mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+
+                <!--mat-form-field appearance="fill">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field-->
+
+
+
+              </div>
+              <div>
+                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                    <mat-label>Montant HT</mat-label>
+                    <input type="number" matInput formControlName="montant_ht" [(ngModel)]="debours.montant_ht"  />
+                    
+                </mat-form-field>
+               
+                
+                   <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                        <mat-label>Monnaie</mat-label>
+                        <input matInput formControlName="monnaie" [(ngModel)]="debours.monnaie">
+                        
+                    </mat-form-field-->
+
+                    <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                        <mat-label>Monnaie</mat-label>
+                        <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                        <mat-select (selectionChange)="changemonnaie($event)" formControlName="monnaie" [(ngModel)]="debours.monnaie" required>
+                            <!--mat-option [value]="'United States of America'">
+                                United States of America
+                            </mat-option-->
+                            <mat-option *ngFor="let grd of rows_monnaie" [value]="grd.id">
+                                {{grd.libelle}}
+                            </mat-option>
+                         </mat-select>   
+                    </mat-form-field>
+
+
+
+              </div>
+              <!--div>
+                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                    <mat-label>Adresse</mat-label>
+                    <input matInput formControlName="adresse" [(ngModel)]="debours.adresse">
+                    
+                </mat-form-field>
+              </div-->
+   </form>
+</div>
+<div fxLayout="row" fxLayoutAlign="start start">
+    <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+        [disabled]="deboursForm.invalid">
+        Enregistrer
+    </button>
+    <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+        ANNULER
+    </button>
+</div>
+
+ </ng-template>
+ <ng-template #missionDialog>
+   
+    <p><b>Formulaire des Missions</b></p>
+        <!--Debut-->
+        <div class="divform" >
+                           <form name="deboursForm2" [formGroup]="deboursForm2" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                           <div class="centerinput">
+                                   
+                               <input type="hidden" formControlName="id" [(ngModel)]="produit.id">
+                               <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                   <mat-label>Code</mat-label>
+                                   <input matInput formControlName="code" [(ngModel)]="produit.code">
+                                   <mat-error>
+                                       Code obligatoire
+                                   </mat-error>
+                               </mat-form-field>
+
+                               <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;" >
+                                   <mat-label>Libellé</mat-label>
+                                   <input matInput formControlName="libelle" [(ngModel)]="produit.libelle">
+                                   <mat-error>
+                                       Libellé obligatoire
+                                   </mat-error>
+                               </mat-form-field>
+
+                           </div>
+                           <div>
+                               
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;">
+                                <mat-label>Associé Responsable</mat-label>
+                                <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                <mat-select (selectionChange)="changegrade($event)" formControlName="associe_resp" [(ngModel)]="produit.associe_resp" required>
+                                    <!--mat-option [value]="'United States of America'">
+                                        United States of America
+                                    </mat-option-->
+                                    <mat-option *ngFor="let pers of row_personnel" [value]="pers.id">
+                                        {{pers.nom}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field>
+                            
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Senior manager</mat-label>
+                                <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                <mat-select (selectionChange)="changegrade($event)" formControlName="senior_manager" [(ngModel)]="produit.senior_manager" required>
+                                    <!--mat-option [value]="'United States of America'">
+                                        United States of America
+                                    </mat-option-->
+                                    <mat-option *ngFor="let pers of row_personnel" [value]="pers.id">
+                                        {{pers.nom}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field>
+                           </div>
+                         <div>
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;">
+                                <mat-label>Chef de mission</mat-label>
+                                <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                <mat-select (selectionChange)="changegrade($event)" formControlName="chef_mission" [(ngModel)]="produit.chef_mission" required>
+                                    <!--mat-option [value]="'United States of America'">
+                                        United States of America
+                                    </mat-option-->
+                                    <mat-option *ngFor="let pers of row_personnel" [value]="pers.id">
+                                        {{pers.nom}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field> 
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Produit</mat-label>
+                                <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                <mat-select (selectionChange)="changegrade($event)" formControlName="produit" [(ngModel)]="produit.produit" required>
+                                    <!--mat-option [value]="'United States of America'">
+                                        United States of America
+                                    </mat-option-->
+                                    <mat-option *ngFor="let prd of row_produit" [value]="prd.id">
+                                        {{prd.libelle}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field> 
+                         </div>
+                                                          
+                          
+                             
+                           <div fxLayout="row" fxLayoutAlign="start start">
+                               <button (click)="ajout_produit(produit,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                   [disabled]="deboursForm2.invalid">
+                                   Enregistrer
+                               </button>
+                               <button (click)="annuler_produit()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                   ANNULER
+                               </button>
+                           </div>
+                           </form>
+                       </div>
+        <!--Fin-->
+       
+    
+ </ng-template>
+
+  </div>  
+
+
+       

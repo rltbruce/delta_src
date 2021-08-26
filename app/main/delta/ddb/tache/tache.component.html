@@ -1,0 +1,273 @@
+<div id="formsclient" class="page-layout simple fullwidth" fxLayout="column">
+
+    <!-- HEADER -->
+    <div class="header accent p-24 h-20" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="secondary-text s-18">home</mat-icon>
+                <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+                <span class="secondary-text">Tache et Sous-tache</span>
+            </div>
+            <!--div class="h1 mt-16">Forms</div-->
+        </div>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+			<div>
+	            <button mat-raised-button type="button" color="accent" (click)="ajouter()" style="width: 10%;">
+	                Nouveau
+	            </button>
+	            <button mat-raised-button type="button" color="primary" (click)="modifier()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Modifier
+	            </button>
+	            <button mat-raised-button type="button" color="warn" (click)="supprimer()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Supprimer
+	            </button>
+	        </div>
+	        <div>
+	        <mat-tab-group *ngIf="afficherFormAjoutModif">
+                 <mat-tab label="Formulaire Tache">
+                 <!--Debut-->
+                 <div class="divform" >
+                                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                        <div class="centerinput">
+                                            
+								        <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                                        <mat-form-field  fxFlex="100" class="pl-4" >
+                                            <mat-label>Code</mat-label>
+                                            <input matInput formControlName="code" [(ngModel)]="debours.code">
+                                            <mat-error>
+                                                Code obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+                        
+                                        <mat-form-field  fxFlex="100" class="pl-4" style="width:600px">
+                                            <mat-label>Libellé</mat-label>
+                                            <input matInput formControlName="libelle" [(ngModel)]="debours.libelle">
+                                            <mat-error>
+                                                Libellé obligatoire
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                    </div>
+                                    <div>
+                                        <!--mat-label>Type de debours</mat-label>
+                                        <mat-checkbox (click)="toggleSelectAll()" [checked]="1"
+                                        [indeterminate]="0"></mat-checkbox-->
+                                      
+                                    </div>
+                                    <div class="centerinput">
+                                        <!--mat-form-field  fxFlex="100" class="pl-4">
+                                            <mat-label>Unitaire</mat-label>
+                                            <input matInput formControlName="unitaire" [(ngModel)]="debours.fax">
+                                           
+                                        </mat-form-field-->
+                                        </div>
+                                      
+                                   
+                                        <!--div class="terms" fxLayout="row" fxLayoutAlign="center center">
+                                            <mat-checkbox name="terms" checked="true" aria-label="I read and accept" required>
+                                                <span>I read and accept</span>
+                                            </mat-checkbox>
+                                        
+                                            <a href="#">terms and conditions</a>
+                                        </div-->
+                                    <div fxLayout="row" fxLayoutAlign="start start">
+                                        <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                            [disabled]="deboursForm.invalid">
+                                            Enregistrer
+                                        </button>
+                                        <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                            ANNULER
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                 <!--Fin-->
+                 </mat-tab>
+             </mat-tab-group>
+
+             <mat-tab-group *ngIf="afficherFormproduit">
+                <mat-tab label="Formulaire Sous-Tache">
+                <!--Debut-->
+                <div class="divform" >
+                                   <form name="deboursForm2" [formGroup]="deboursForm2" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                       <div class="centerinput">
+                                           
+                                       <input type="hidden" formControlName="id" [(ngModel)]="produit.id">
+                                       <mat-form-field   class="pl-4" style="width:100px">
+                                           <mat-label>Code</mat-label>
+                                           <input matInput formControlName="code" [(ngModel)]="produit.code">
+                                           <mat-error>
+                                               Code obligatoire
+                                           </mat-error>
+                                       </mat-form-field>
+                       
+                                       <mat-form-field   class="pl-4" style="width:600px" >
+                                           <mat-label>Libellé</mat-label>
+                                           <input matInput formControlName="libelle" [(ngModel)]="produit.libelle">
+                                           <mat-error>
+                                               Libellé obligatoire
+                                           </mat-error>
+                                       </mat-form-field>
+                                       <mat-form-field   class="pl-4"  style="width:100px">
+                                       <mat-label>Ponderation</mat-label>
+                                        <input matInput formControlName="ponderation" [(ngModel)]="produit.ponderation">
+                                        
+                                    </mat-form-field>
+   
+                                   </div>
+                                 
+                                                                  
+                                  
+                                     
+                                   <div fxLayout="row" fxLayoutAlign="start start">
+                                       <button (click)="ajout_produit(produit,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                           [disabled]="deboursForm2.invalid">
+                                           Enregistrer
+                                       </button>
+                                       <button (click)="annuler_produit()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                           ANNULER
+                                       </button>
+                                   </div>
+                                   </form>
+                               </div>
+                <!--Fin-->
+                </mat-tab>
+            </mat-tab-group>
+
+             </div>
+             <input
+             type="text"
+             style="padding:8px;margin:15px auto;width:30%;"
+             placeholder="Entrer la valeur pour filtrer..."
+             (keyup)="updateFilter($event)"
+           />	
+           <div>
+            <span class="secondary-text" style="margin-left:20px"><b>  Tache </b></span>
+           </div>
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="row_type"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="5"
+                            [footerHeight]="25"
+                            [rowHeight]="35"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectdebours($event)'
+                            [limit]="5"
+                            style="margin-right:250px;margin-left:20px !important">
+                            
+                         
+                            <ngx-datatable-column name="Code" [flexGrow]="1" [minWidth]="20" [maxWidth]= "140" style="vertical-align:middle;font-size:10">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.code}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Libellé" [flexGrow]="1" [minWidth]="20" [maxWidth]= "540">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.libelle}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                            
+                             
+
+                        </ngx-datatable>
+                      </div><br> 
+                      <div>
+                        <button mat-raised-button type="button" color="accent" (click)="ajouter_produit()"  *ngIf="afficherboutonModifSupr" style="width: 10%;">
+                            Nouveau
+                        </button>
+                        <button mat-raised-button type="button" color="primary" (click)="modifier_produit()" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                            Modifier
+                        </button>
+                        <button mat-raised-button type="button" color="warn" (click)="supprimer_produit()" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                            Supprimer
+                        </button>
+                    </div>
+                    <div>
+                        <span class="secondary-text"><b>  Sous-tache </b></span>
+                       </div>
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="row_prd"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="5"
+                            [footerHeight]="25"
+                            [rowHeight]="'35'"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectproduit($event)'
+                            [limit]="10"
+                            style="margin-right:250px;margin-left:20px !important">
+                            
+                         
+                            <ngx-datatable-column name="Code" [minWidth]="20" [maxWidth]= "140">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.code}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Libellé" [minWidth]="20" [maxWidth]= "540">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.libelle}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                              <ngx-datatable-column name="Ponderation" [minWidth]="20" [maxWidth]= "140">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.ponderation}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                             
+                             
+
+                        </ngx-datatable>
+                      </div><br> 
+                    
+                        
+    </div>
+    <div>
+     <ng-template #suppressionDialog>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement produit?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_produit()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+    </div>
+   <div> 
+  <ng-template #suppressionDialog1>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement type ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  </div>  
+
+
+       

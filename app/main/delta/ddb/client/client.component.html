@@ -1,0 +1,209 @@
+<div id="formsclient" class="page-layout simple fullwidth" fxLayout="column">
+
+    <!-- HEADER -->
+    <div class="header accent p-24 h-60" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" fxLayoutAlign="center start">
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="secondary-text s-18">home</mat-icon>
+                <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+                <span class="secondary-text">Client</span>
+            </div>
+            <!--div class="h1 mt-16">Forms</div-->
+        </div>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+			<div>
+	            <button mat-raised-button type="button" color="accent" (click)="ajouter()" style="width: 10%;">
+	                Nouveau
+	            </button>
+	            <button mat-raised-button type="button" color="primary" (click)="modifier()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Modifier
+	            </button>
+	            <button mat-raised-button type="button" color="warn" (click)="supprimer()" *ngIf="afficherboutonModifSupr" class="ml-4" style="width: 10%;">
+	                Supprimer
+	            </button>
+            </div><br>
+           
+	        <div>
+	        <mat-tab-group *ngIf="afficherFormAjoutModif">
+                 <mat-tab label="Formulaire">
+                 <!--Debut-->
+                 <div class="divform" >
+                                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                        <div class="centerinput">
+                                            <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                                <mat-label>Code</mat-label>
+                                                <input matInput formControlName="code" [(ngModel)]="debours.code">
+                                                <mat-error>
+                                                    Code obligatoire
+                                                </mat-error>
+                                            </mat-form-field>
+                                           
+                                            
+                                               <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                                    <mat-label>Nom du client</mat-label>
+                                                    <input matInput formControlName="nom_client" [(ngModel)]="debours.nom_client">
+                                                    <mat-error>
+                                                        Nom obligatoire
+                                                    </mat-error>
+                                                </mat-form-field>
+                                              </div>
+                                              <div>
+                                                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                                    <mat-label>Telephone</mat-label>
+                                                    <input matInput formControlName="telephone" [(ngModel)]="debours.telephone">
+                                                    
+                                                </mat-form-field>
+                                               
+                                                
+                                                   <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                                        <mat-label>Fax</mat-label>
+                                                        <input matInput formControlName="fax" [(ngModel)]="debours.fax">
+                                                        
+                                                    </mat-form-field>
+                                              </div>
+                                              <div>
+                                                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                                    <mat-label>Adresse</mat-label>
+                                                    <input matInput formControlName="adresse" [(ngModel)]="debours.adresse">
+                                                    
+                                                </mat-form-field>
+                                              </div>
+                                    <div fxLayout="row" fxLayoutAlign="start start">
+                                        <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                            [disabled]="deboursForm.invalid">
+                                            Enregistrer
+                                        </button>
+                                        <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                            ANNULER
+                                        </button>
+                                    </div>
+                                    </form>
+                                </div>
+                 <!--Fin-->
+                 </mat-tab>
+             </mat-tab-group>
+             </div><br>
+             <ng-template #saisieDialog>
+                <div class="divform" >
+                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                      <div class="centerinput">
+                        <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                        <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                            <mat-label>Code</mat-label>
+                            <input matInput formControlName="code" [(ngModel)]="debours.code">
+                            <mat-error>
+                                Code obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                       
+                        
+                           <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Nom du client</mat-label>
+                                <input matInput formControlName="nom_client" [(ngModel)]="debours.nom_client">
+                                <mat-error>
+                                    Nom obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div>
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                <mat-label>Telephone</mat-label>
+                                <input matInput formControlName="telephone" [(ngModel)]="debours.telephone">
+                                
+                            </mat-form-field>
+                           
+                            
+                               <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                    <mat-label>Fax</mat-label>
+                                    <input matInput formControlName="fax" [(ngModel)]="debours.fax">
+                                    
+                                </mat-form-field>
+                          </div>
+                          <div>
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Adresse</mat-label>
+                                <input matInput formControlName="adresse" [(ngModel)]="debours.adresse">
+                                
+                            </mat-form-field>
+                          </div>
+               </form>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                    [disabled]="deboursForm.invalid">
+                    Enregistrer
+                </button>
+                <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                    ANNULER
+                </button>
+            </div>
+             </ng-template>
+             <input
+             type="text"
+             style="padding:8px;margin:15px auto;width:30%;"
+             placeholder="Entrer la valeur pour filtrer..."
+             (keyup)="updateFilter($event)"
+           />	
+       	    
+                      <div>
+                        <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="rows_debours"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns"
+                            [columnMode]="'force'"
+                            [headerHeight]="48"
+                            [footerHeight]="56"
+                            [rowHeight]="'auto'"
+                            [scrollbarH]="true"
+                            [reorderable]="reorderable"
+                            [selected]="selected"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectdebours($event)'
+                            [limit]="10">
+                            
+                         
+                            <ngx-datatable-column name="Code">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.code}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Nom du client">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.nom_client}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                              <ngx-datatable-column name="Adresse">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                    {{row.adresse}}
+                                 </ng-template>
+                              </ngx-datatable-column> 
+                            
+
+                        </ngx-datatable>
+                      </div><br> 
+                    
+                        
+    </div>
+     <ng-template #suppressionDialog>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+      <button mat-button matDialogClose color="primary">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  </div>  
+
+
+       

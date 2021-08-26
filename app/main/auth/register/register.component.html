@@ -1,0 +1,90 @@
+<div id="register" fxLayout="column">
+
+    <div id="register-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="register-form" [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+
+            <div class="logo">
+                <img src="assets/images/logos/fuse.svg">
+            </div>
+
+            <div class="title">CRÉATION DE COMPTE</div>
+
+            <form name="registerForm" [formGroup]="registerForm" novalidate>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Nom</mat-label>
+                    <input matInput formControlName="name" [(ngModel)]="user.nom">
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <mat-error>
+                        Nom obligatoire
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Prénom</mat-label>
+                    <input matInput formControlName="prenom" [(ngModel)]="user.prenom">
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <mat-error>
+                        Prénom obligatoire
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" [(ngModel)]="user.email">
+                    <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+                    <mat-error *ngIf="registerForm.get('email').hasError('required')">
+                        Email obligatoire
+                    </mat-error>
+                    <mat-error *ngIf="registerForm.get('email').hasError('email')">
+                        S'il vous plaît, mettez une adresse email valide
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput type="password" formControlName="password" [(ngModel)]="user.password">
+                    <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error>
+                        Mot de passe obligatoire
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Mot de passe (Confirmation)</mat-label>
+                    <input matInput type="password" formControlName="passwordConfirm">
+                    <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+                    <mat-error *ngIf="registerForm.get('passwordConfirm').hasError('required')">
+                        Confirmation Mot de passe  obligatoire
+                    </mat-error>
+                    <mat-error *ngIf="!registerForm.get('passwordConfirm').hasError('required') &&
+                                       registerForm.get('passwordConfirm').hasError('passwordsNotMatching')">
+                        les mots de passe doivent correspondre
+                    </mat-error>
+                </mat-form-field>
+
+                <!--div class="terms" fxLayout="row" fxLayoutAlign="center center">
+                    <mat-checkbox name="terms" aria-label="I read and accept" required>
+                        <span>I read and accept</span>
+                    </mat-checkbox>
+                    <a href="#">terms and conditions</a>
+                </div!-->
+
+                <button (click)="save_in_base(user,0)" mat-raised-button color="accent" class="submit-button" aria-label="CREATE AN ACCOUNT"
+                    [disabled]="registerForm.invalid">
+                    CREER UN COMPTE
+                </button>
+
+            </form>
+
+            <div class="register" fxLayout="column" fxLayoutAlign="center center">
+                <span class="text">Vous avez déjà un compte?</span>
+                <a class="link" [routerLink]="'/login'">Se connecter</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

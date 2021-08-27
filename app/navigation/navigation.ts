@@ -1,13 +1,24 @@
 import { FuseNavigation } from '@fuse/types';
 
 export const navigation: FuseNavigation[] = [
-    {
+   /* {
         id       : 'applications',
         title    : 'DELTA AUDIT',
        // translate: 'NAV.APPLICATIONS',
         type     : 'group',
         icon     : 'apps',
-        children : [
+        children : [*/
+            {
+                id       : 'accueil',
+                title    : 'Accueil',
+                //translate: 'NAV.SAMPLE.TITLE',
+                type     : 'item',
+                icon     : 'home',
+                url      : '/accueil'
+
+           
+
+            },
              {
                 id       : 'Administration',
                 title    : 'Administration',
@@ -242,7 +253,7 @@ export const navigation: FuseNavigation[] = [
               ]
              }
 
-            ]
-        }
+            /*]
+        }*/
         ];
            

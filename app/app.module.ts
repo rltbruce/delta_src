@@ -29,12 +29,13 @@ import { MissionModule } from 'app/main/delta/ddb/mission/mission.module';
 import { AlertComponent } from './_components/alert/alert.component';
 import { LoginComponent } from './main/auth/login/login.component';
 import { SampleComponent } from '../app/main/sample/sample.component';
+import { AccueilModule } from 'app/main/accueil/accueil.module';
 
 /* AUTH */
 import { JwtInterceptor } from '../app/_helpers/jwt.interceptor';
 import { ErrorInterceptor } from '../app/_helpers/error.interceptor';
 import { AuthGuard } from '../app/_helpers/auth.guard';
-import { AccueilComponent } from './main/accueil/accueil.component';
+//import { AccueilComponent } from './main/accueil/accueil.component';
 /* FIN AUTH */
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ClientComponent } from './main/delta/ddb/client/client.component';
@@ -46,7 +47,7 @@ import { MissionComponent } from './main/delta/ddb/mission/mission.component';
 const appRoutes: Routes = [
     {
         path      : '**',
-        redirectTo: 'sample'
+        redirectTo: 'accueil'
     }
 
 ];
@@ -55,7 +56,7 @@ const appRoutes: Routes = [
     declarations: [
         AppComponent,
         AlertComponent,
-        AccueilComponent
+        //AccueilComponent
         
        
     ],
@@ -93,7 +94,8 @@ const appRoutes: Routes = [
         LayoutModule,
         SampleModule,
         AuthModule,
-        MatDialogModule
+        MatDialogModule,
+        AccueilModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -24,6 +24,9 @@ export class IndexApiService {
   getAllByClient(controller,idcl) {//DP
     return this.http.get<any>(this.constantService.apiUrl+controller+"?idcl="+idcl);
   }
+  getgeneralise(controller,filtre) {
+    return this.http.get<any>(this.constantService.apiUrl+controller+filtre);
+  }
 
   get_user(email, pwd) {
     return this.http.get<any>(this.constantService.apiUrl + 'utilisateurs?email=' + email + '&pwd=' + pwd);

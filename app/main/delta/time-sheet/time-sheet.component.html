@@ -1,0 +1,476 @@
+<div class="page-layout simple fullwidth tabbed" fxLayout="column">
+
+    <!-- CONTENT -->
+
+    <div class="content p-24" >
+        <div class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" style="padding: 0!important;">
+            <div  class="package-type h-44 blue-grey-800" fxLayout="row" fxLayoutAlign="space-between center">
+                <span class="p-12">
+                    <span class="border-right mr-2" >Time Sheet </span>
+                    
+                    <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                    <!--button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"(click)="ajouter()" >
+                        <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                    <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifier()" *ngIf="afficherboutonModifSupr_entete">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer" (click)="supprimer()" *ngIf="afficherboutonModifSupr_entete">
+                        <mat-icon>delete</mat-icon>
+                    </button-->
+    
+    
+                    <!--button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer">
+                        <mat-icon>save</mat-icon>
+                    </button-->
+    
+                    <!--button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler">
+                        <mat-icon>cancel</mat-icon>
+                    </button-->
+                </span>
+                <span class="p-12">
+                    <span class="border-right mr-2" >Personnel </span> {{currentpersonnel.nom}}                 
+                    
+                </span>
+            </div>
+            <mat-divider></mat-divider>            
+            <div class="mt-20">
+                <form name="filtre_enteteForm" [formGroup]="filtre_enteteForm" novalidate fxLayout="row" fxLayoutAlign="center center" fxLayout.xs="column">
+                    <div fxLayout="row" fxLayout.xs="column">                        
+                    <mat-form-field  fxFlex="100" class="pl-4" appearance="outline"> 
+                        <mat-label > Date début de la semaine </mat-label > 
+                        <input  matInput [matDatepicker] = "picker" [(ngModel)]="filtre.date_debut_semaine" formControlName="date_debut_semaine" required> 
+                        <mat-datepicker-toggle  matSuffix [for] = "picker "> </mat-datepicker-toggle> 
+                        <mat-datepicker #picker> </mat-datepicker> 
+                        <mat-error>
+                                Date obligatoire
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field  fxFlex="100" class="pl-4" appearance="outline"> 
+                        <mat-label > Date de fin de la semaine </mat-label > 
+                        <input  matInput [matDatepicker] = "picker1" [(ngModel)]="filtre.date_fin_semaine" formControlName="date_fin_semaine" required> 
+                        <mat-datepicker-toggle  matSuffix [for] = "picker1"> </mat-datepicker-toggle> 
+                        <mat-datepicker #picker1> </mat-datepicker> 
+                        <mat-error>
+                                Date obligatoire
+                        </mat-error>
+                    </mat-form-field>
+    
+                    <!--mat-form-field  fxFlex="100" class="pl-4" appearance="outline" style="width:320px;">
+                        <mat-label>Personnel</mat-label>
+                    
+                        <mat-select formControlName="id_personnel" [(ngModel)]="entete_time_sheet.id_personnel" required>
+                           
+                            <mat-option *ngFor="let personnal of allpersonnel" 
+                                [value]="personnal.id" [attr.selected]="entete_time_sheet.id_personnel==personnal.id ? true : null" >
+                            {{personnal.nom}}
+                            </mat-option>
+                        </mat-select>   
+                    </mat-form-field-->
+                   
+                </div>
+                
+                <div class="ml-24">
+                    <button  mat-raised-button color="accent" class="submit-button" aria-label="CREATE AN FORM"
+                        [disabled]="filtre_enteteForm.invalid" (click)="timesheet_entetebysemaine()">
+                        Actualiser
+                    </button>
+                </div>
+                  
+                </form>
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <mat-divider></mat-divider>
+                    <div  class="package-type h-44 blue-grey-A700" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12">
+                            <span class="border-right mr-2" >ENTETE </span>
+                            
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="ajouter()" *ngIf="!this.new_item && !this.editing[this.index_selected]">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifier()"
+                                *ngIf="item_selected.length > 0 && !this.editing[this.index_selected]">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected.length > 0 && !this.editing[this.index_selected]" (click)="supprimer()">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="this.editing[this.index_selected]" (click)="save_in_base(0)">
+                                <mat-icon>save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler()"
+                                *ngIf="item_selected.length > 0 && this.editing[this.index_selected]">
+                                <mat-icon>cancel</mat-icon>
+                            </button>           
+                        </span>
+                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." (keyup)="updateFilter_entete($event)" /></span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_timesheet_entete" [loadingIndicator]="loadingIndicator" [columnMode]="'force'"
+                            [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable"
+                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected" [selectionType]="'single'"
+                            (select)="onSelect($event)">
+                            <ngx-datatable-column name="Date" prop="date_feuille" [cellClass]="'my-custom-cell-global'">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing[rowIndex]" >{{ formatDate(value) }}</span>
+                                    <span *ngIf="editing[rowIndex]">
+                                        <input  [max]="datenow" [matDatepicker] = "picker2" (dateInput)="updateValue($event, 'date_feuille', rowIndex)" [value]="value"/>
+                                        <mat-datepicker-toggle  matSuffix [for] = "picker2"> </mat-datepicker-toggle> 
+                                        <mat-datepicker  #picker2> </mat-datepicker> 
+
+                                    </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                    
+                </div>
+                <div>
+
+                    <mat-tab-group (selectedTabChange)="tabClick($event)" [(selectedIndex)]="tabindex">
+    
+                        <mat-tab label="DETAIL TIME SHEET">
+                            <div class="tab-content p-24">
+                                <!-- PUT YOUR TAB CONTENT HERE -->
+                                <div class="mat-card mat-elevation-z4  m-4">
+                                    <mat-divider></mat-divider>
+                                    <div  class="package-type h-44 blue-grey-A700" fxLayout="row" fxLayoutAlign="space-between center">
+                                        <span class="p-12">
+                                            <span class="border-right mr-2" >DETAIL </span>
+                                            
+                                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter_detail"
+                                                (click)="ajouter_detail()" *ngIf="!this.new_item_detail && !this.editing_detail[this.index_selected_detail]">
+                                                <mat-icon>add_circle_outline</mat-icon>
+                                            </button>
+                                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier_detail" (click)="modifier_detail()"
+                                                *ngIf="item_selected_detail.length > 0 && !this.editing_detail[this.index_selected_detail]">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                                *ngIf="item_selected_detail.length > 0 && !this.editing_detail[this.index_selected_detail]" (click)="supprimer_detail()">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+
+
+                                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                                *ngIf="this.editing_detail[this.index_selected_detail]" (click)="save_in_base_detail(0)">
+                                                <mat-icon>save</mat-icon>
+                                            </button>
+
+                                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler_detail()"
+                                                *ngIf="item_selected_detail.length > 0 && this.editing_detail[this.index_selected_detail]">
+                                                <mat-icon>cancel</mat-icon>
+                                            </button>           
+                                        </span>
+                                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                            placeholder="Rechercher..." (keyup)="updateFilter_detail($event)" /></span>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div>
+                                        <ngx-datatable class="material" [rows]="rows_timesheet_detail" [loadingIndicator]="loadingIndicator_detail" [columnMode]="'force'"
+                                            [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_detail"
+                                            [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_detail" [selectionType]="'single'"
+                                            (select)="onSelect_detail($event)">
+
+
+
+                                            <ngx-datatable-column name="Mission" prop="mission.libelle">
+                                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                    <span  *ngIf="!editing_detail[rowIndex]">{{ value }}</span>
+                                                    <span *ngIf="editing_detail[rowIndex]">
+                                                        <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                            <mat-select (selectionChange)="updateValue_detail($event, 'mission.id', rowIndex)" [(value)]="row.mission.id" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                                
+                                                                <mat-option *ngFor="let miss of all_mission" 
+                                                                    [value]="miss.id" [attr.selected]="row.mission.id==miss.id ? true : null" >
+                                                                {{miss.libelle}}
+                                                                </mat-option>
+                                                            </mat-select>
+
+                                                        </mat-form-field>
+
+                                                    </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+
+                                
+
+                                            <ngx-datatable-column name="Description du travail" prop="libelle">
+                                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                    <span *ngIf="!editing_detail[rowIndex]">{{ value }}</span>
+                                                    <input  *ngIf="editing_detail[rowIndex]" type="text" (change)="updateValue($event, 'libelle', rowIndex)" [value]="value" />
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            
+                                            <ngx-datatable-column name="Sous tâche" prop="sous_tache.libelle">
+                                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row" >
+                                                        <span *ngIf="!editing_detail[rowIndex]">{{ value }}</span>
+                                                        <span *ngIf="editing_detail[rowIndex]" >
+                                                            <mat-form-field >
+                                                                <mat-select (selectionChange)="updateValue_detail($event, 'sous_tache.id', rowIndex)" [(value)]="row.sous_tache.id" style="min-width: 100px;max-width: 120px; background-color: white;">
+                                                                    
+                                                                    <mat-option *ngFor="let sous_ta of all_sous_tache" 
+                                                                        [value]="sous_ta.id" [attr.selected]="row.sous_tache.id==sous_ta.id ? true : null" >
+                                                                    {{sous_ta.libelle}}
+                                                                    </mat-option>
+                                                                </mat-select>
+    
+                                                            </mat-form-field>
+    
+                                                        </span>
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            
+                                            <ngx-datatable-column name="Pourcentage" prop="pourcentage">
+                                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                    <span *ngIf="!editing_detail[rowIndex]">{{ value }}</span>
+                                                    <input  *ngIf="editing_detail[rowIndex]" type="text" (change)="updateValue($event, 'pourcentage', rowIndex)" [value]="value" />
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            
+                                            <ngx-datatable-column name="Durée" prop="duree">
+                                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                    <span *ngIf="!editing_detail[rowIndex]">{{ value }}</span>
+                                                    <input  *ngIf="editing_detail[rowIndex]" type="text" (change)="updateValue($event, 'duree', rowIndex)" [value]="value" />
+                                                </ng-template>
+                                            </ngx-datatable-column>
+                                            
+                                        </ngx-datatable>
+                                    </div>
+                                    
+                                </div>
+                                <!-- / PUT YOUR TAB CONTENT HERE -->
+                            </div>
+                        </mat-tab>
+    
+                        <mat-tab label="RESUME PAR SEMAINE">
+                            <div class="tab-content p-24">
+                                <!-- PUT YOUR TAB CONTENT HERE -->
+                                <div>
+                                    <ngx-datatable class="material" 
+                                            [rows]="rows_timesheet_resume" 
+                                            [loadingIndicator]="loadingIndicator_resume" 
+                                            [columnMode]="'flex'"
+                                            [headerHeight]="48" 
+                                            [footerHeight]="56" 
+                                            [rowHeight]="'auto'"  
+                                            [scrollbarH]="true"
+                                            [reorderable]="reorderable_resume"
+                                            [limit]="10" >            
+            
+            
+                                    <ngx-datatable-column name="Lundi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.LUNDI" style="padding: 0!important;">
+                                                <mat-table [dataSource]="row.LUNDI" cel-border>
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table>
+                                            </div> 
+                                                                  
+                                        </ng-template>
+                                    </ngx-datatable-column> 
+                                    <ngx-datatable-column name="Mardi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.MARDI" style="padding: 0!important;">
+                                                <mat-table [dataSource]="row.MARDI">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Mercredi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.MERCREDI">
+                                                <mat-table [dataSource]="row.MERCREDI">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table>
+                                            </div>
+                                                                    
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Jeudi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.JEUDI">
+                                                <mat-table [dataSource]="row.JEUDI">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table>
+                                            </div>    
+                                                                    
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Vendredi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.VENDREDI">
+                                                <mat-table [dataSource]="row.VENDREDI">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Samedi" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.SAMEDI">
+                                                <mat-table [dataSource]="row.SAMEDI">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table> 
+                                            </div>
+                                                                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Dimanche" [flexGrow]="1" [minWidth]="350">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.DIMANCHE">
+                                                <mat-table [dataSource]="row.DIMANCHE">
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous tâche</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_tache.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    </ngx-datatable>
+                                </div>
+                                <!-- / PUT YOUR TAB CONTENT HERE -->
+                            </div>
+                        </mat-tab>
+    
+                    </mat-tab-group>
+    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+    
+    <ng-template #suppressionDialog>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>      
+          
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+          <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+          <button mat-button matDialogClose color="primary">Fermer</button>
+        </mat-dialog-actions>
+      </ng-template>
+      <ng-template #suppressionDialog_detail>
+        <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+        <mat-dialog-content>      
+          
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+          <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_detail()">Ok</button>
+          <button mat-button matDialogClose color="primary">Fermer</button>
+        </mat-dialog-actions>
+      </ng-template>
+</div>

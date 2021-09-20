@@ -170,7 +170,7 @@ export const navigation: FuseNavigation[] = [
                     //translate: 'NAV.SAMPLE.TITLE',
                     type     : 'item',
                     //icon     : 'home',
-                    url  : '/apps/dashboards/project'
+                    url  : '/timeSheet'
          
                }
                ]

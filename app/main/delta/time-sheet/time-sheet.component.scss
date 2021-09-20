@@ -1,0 +1,14 @@
+/*mat-cell, mat-header-cell, mat-footer-cell {
+    display:flex;
+   justify-content:center;
+   padding: 10px !important;
+}*/
+:host ::ng-deep .ngx-datatable .datatable-body .datatable-scroll {
+    display: inherit;
+  }
+  .my-custom-cell-global
+  {
+    /*display: flex !important;
+    text-align: right !important;
+    justify-content: flex-end;*/
+  }

@@ -42,6 +42,7 @@ import { ClientComponent } from './main/delta/ddb/client/client.component';
 import { TacheComponent } from './main/delta/ddb/tache/tache.component';
 import { PersonnelComponent } from './main/delta/ddb/personnel/personnel.component';
 import { MissionComponent } from './main/delta/ddb/mission/mission.component';
+import { TimeSheetModule} from './main/delta/time-sheet/time-sheet.module';
 
 
 const appRoutes: Routes = [
@@ -55,8 +56,7 @@ const appRoutes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        AlertComponent,
-        //AccueilComponent
+        AlertComponent
         
        
     ],
@@ -95,7 +95,8 @@ const appRoutes: Routes = [
         SampleModule,
         AuthModule,
         MatDialogModule,
-        AccueilModule
+        AccueilModule,
+        TimeSheetModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

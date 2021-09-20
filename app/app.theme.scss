@@ -47,6 +47,12 @@ $fuse-navy: (
         A700: $light-primary-text,
     )
 );
+$fuse-cust: (
+    500: rgb(11,60,97),
+    contrast: (
+        500: $light-primary-text,
+    )
+);
 
 // Generate Fuse color classes for custom palettes
 $custom_palettes: (
@@ -95,7 +101,7 @@ $typography: mat-typography-config(
 
 // Define the primary, accent and warn palettes
 $default-primary-palette: mat-palette($fuse-navy);
-//$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);
+//$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);$default-accent-palette: mat-palette($fuse-cust, 500);
 $default-accent-palette: mat-palette($mat-indigo, 400);
 $default-warn-palette: mat-palette($mat-red);
 

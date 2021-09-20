@@ -251,7 +251,7 @@ export const navigation: FuseNavigation[] = [
                }
              
               ]
-             }
+             } 
 
             /*]
         }*/

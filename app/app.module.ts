@@ -43,6 +43,11 @@ import { TacheComponent } from './main/delta/ddb/tache/tache.component';
 import { PersonnelComponent } from './main/delta/ddb/personnel/personnel.component';
 import { MissionComponent } from './main/delta/ddb/mission/mission.component';
 import { TimeSheetModule} from './main/delta/time-sheet/time-sheet.module';
+import { DocumentModule } from './main/delta/document/document.module';
+import { ChatModule } from './main/delta/chat/chat.module';
+import { AbsenceModule } from './main/delta/absence/absence.module';
+import { CongeModule  } from './main/delta/conge/conge.module';
+import { ReportingTimesheetModule } from './main/delta/reporting-timesheet/reporting-timesheet.module';
 
 
 const appRoutes: Routes = [
@@ -96,7 +101,12 @@ const appRoutes: Routes = [
         AuthModule,
         MatDialogModule,
         AccueilModule,
-        TimeSheetModule
+        TimeSheetModule,
+        DocumentModule,
+        ChatModule,
+        AbsenceModule,
+        CongeModule,
+        ReportingTimesheetModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

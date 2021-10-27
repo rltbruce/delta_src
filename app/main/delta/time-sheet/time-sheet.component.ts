@@ -6,6 +6,7 @@ import { IndexApiService } from '../../../_services/index-api.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MatTableDataSource} from '@angular/material/table';
 import { ViewEncapsulation } from '@angular/core';
+import { DatePipe } from '@angular/common';
 class obj
   {
     constructor() {}
@@ -23,7 +24,7 @@ class obj
 export class TimeSheetComponent implements OnInit
 {
   
-  tableColumns  :  string[] = ['mission', 'soustache','duree'];
+  tableColumns  :  string[] = ['client','mission', 'section', 'soustache','duree'];
   filtre_enteteForm:   FormGroup;
   enteteForm:   FormGroup;
   filtre :      any;  
@@ -55,12 +56,14 @@ export class TimeSheetComponent implements OnInit
   tabindex:any;
   all_mission : any[];
   all_client : any[];
-  all_sous_tache : any[];
+  all_section : any[];
+  all_sous_section : any[];
+  duree_cumule:any;
   
   rows_timesheet_resume : any[];
   loadingIndicator_resume: boolean;
   reorderable_resume: boolean;
-  constructor(private _formBuilder: FormBuilder,private authenticationservice: AuthenticationService,private index_api: IndexApiService,public dialog: MatDialog)
+  constructor(private _formBuilder: FormBuilder,private authenticationservice: AuthenticationService,private index_api: IndexApiService,public dialog: MatDialog,public datepipe: DatePipe)
   {
     // Set the private defaults
     this.reorderable      = true;
@@ -80,7 +83,7 @@ export class TimeSheetComponent implements OnInit
     }
     var currentDate = new Date();  
 
-    this.firstday = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+    this.firstday = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()+1));
     this.lastday = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 7));
     this.filtre={date_debut_semaine:this.firstday, date_fin_semaine:this.lastday};
 
@@ -147,7 +150,7 @@ export class TimeSheetComponent implements OnInit
   updateFilter_detail(event) {
     const val = event.target.value.toLowerCase();
     
-     let ent = ["id","mission.libelle","libelle","sous_tache.libelle","pourcentage","duree"];
+     let ent = ["id","mission.libelle","libelle","sous_section.libelle","pourcentage","duree"];
     
  
     if (val == "") 
@@ -184,9 +187,11 @@ export class TimeSheetComponent implements OnInit
   }
   @ViewChild('suppressionDialog', { static: true }) suppressionDialog:TemplateRef<any>;
    @ViewChild('suppressionDialog_detail', { static: true }) suppressionDialog_detail:TemplateRef<any>;
+   @ViewChild('avertissementDialog_timesheet', { static: true }) avertissementDialog_timesheet:TemplateRef<any>;
   ngOnInit(): void
   { 
-    this.tabindex=0;
+    this.tabindex=1;
+    this.duree_cumule = 0;
     this.filtre_enteteForm = this._formBuilder.group(
       {
         //id        : [''],
@@ -199,16 +204,20 @@ export class TimeSheetComponent implements OnInit
         this.all_client = resp.response;
         console.log(this.all_client);
       });
-    this.index_api.getgeneralise("Mission","?menu=getallmission").subscribe(resp =>
+    /*this.index_api.getgeneralise("Mission","?menu=getallmission").subscribe(resp =>
       {
         this.all_mission = resp.response;
         console.log(this.all_mission);
-      });
+      });*/
       
+      /*this.index_api.getAll("Section").subscribe(resp =>
+        {
+          this.all_section = resp.response;
+        });
       this.index_api.getAll("Soussection").subscribe(resp =>
         {
-          this.all_sous_tache = resp.response;
-        });
+          this.all_sous_section = resp.response;
+        });*/
         this.index_api.getgeneralise("Timesheet_detail","?menu=getresumesemaine&date_debut_semaine="+this.convertionDate(this.firstday)+"&date_fin_semaine="+this.convertionDate(this.lastday)+"&id_personnel="+this.userConnecte.id_pers).subscribe(resp =>
           {
             this.rows_timesheet_resume = resp.response;
@@ -229,9 +238,18 @@ export class TimeSheetComponent implements OnInit
   }
   onSelect({ selected }) {
     
-    if (selected) {
+    if (selected)
+    {
       this.index_selected = this.rows_timesheet_entete.indexOf(selected[0]) ;      
       this.currentItem_entete  = JSON.parse(JSON.stringify(selected[0]));
+      this.tabindex = 0;
+      this.index_api.getgeneralise("Timesheet_detail","?menu=getdetailbyentete&id_entete="+selected[0].id+"&id_personnel="+this.userConnecte.id_pers).subscribe(resp =>
+        {
+          this.all_timesheet_detail = [...resp.response];
+          this.rows_timesheet_detail = resp.response;
+          console.log(this.rows_timesheet_detail);
+    
+        });
     }
     
   }
@@ -306,6 +324,28 @@ export class TimeSheetComponent implements OnInit
     var source = buffer.join("&").replace(/%20/g, "+");
     return (source);
   }
+  verification_avant_save(etat_suppression)
+  {
+    var msg={
+              titre:"AVERTISSEMENT",
+              corps: "Cette date existe dans congé ou absence"
+            };
+            console.log(this.datepipe.transform(new Date(this.item_selected[0].date_feuille), 'yyyy-MM-dd'));
+    this.index_api.getgeneralise('conge',"?menu=getcongeencouretvalidebydate&id_personnel="
+    +this.userConnecte.id_pers+"&date_feuille="+this.datepipe.transform(new Date(this.item_selected[0].date_feuille), 'yyyy-MM-dd')).subscribe((resp) =>
+    {  
+      console.log(resp.response);
+      if (resp.response.length!=0)
+      {
+        this.dialog.open(this.avertissementDialog_timesheet, { disableClose: true,data: msg });        
+      }
+      else
+      {
+        this.save_in_base(etat_suppression);
+      }
+          
+    });
+  }
 
   save_in_base(etat_suppression)
   {
@@ -328,7 +368,7 @@ export class TimeSheetComponent implements OnInit
       id_pers: this.currentpersonnel.id
     }
 
-console.log(data);
+  console.log(data);
     this.index_api.add('Timesheet_entete', this.convertion_data(data), config).subscribe((response) => {
      
 
@@ -404,8 +444,8 @@ console.log(data);
   tabClick(tab)
   {
     if (tab.index==0)
-    {
-      this.index_api.getgeneralise("Timesheet_detail","?cle_etrangere="+this.item_selected[0].id).subscribe(resp =>
+    {console.log(this.item_selected[0].id);
+      this.index_api.getgeneralise("Timesheet_detail","?menu=getdetailbyentete&id_entete="+this.item_selected[0].id+"&id_personnel="+this.userConnecte.id_pers).subscribe(resp =>
         {
           this.all_timesheet_detail = [...resp.response];
           this.rows_timesheet_detail = resp.response;
@@ -441,17 +481,17 @@ console.log(data);
     let item = 
     {
       id:'0',
-      sous_tache:{id: null,
-                  libelle:''},
-      mission:{id: null,
-                              libelle:''}
+      sous_section:{id: null, libelle:''},
+      mission:{ id: null, libelle:''},
+      client:{id: null, nom:''},
+      section:{id: null, libelle:''},
+      pourcentage:0,
+      duree:0,
+      duree_cumule:0
     } ;
 
     this.rows_timesheet_detail.unshift(item);
-
-    this.rows_timesheet_detail = [...this.rows_timesheet_detail];
     
-    this.editing_detail[0] = true;
     this.index_selected_detail = 0;
     
     if (this.item_selected_detail.length > 0) {
@@ -461,12 +501,28 @@ console.log(data);
     {
       this.item_selected_detail.push(item);
     }
-   console.log(this.editing_detail);
+    this.editing_detail[0] = true;
+   console.log(this.item_selected_detail);
+   this.rows_timesheet_detail = [...this.rows_timesheet_detail];
     
   }
-  modifier_detail() {
-    this.editing_detail[this.index_selected_detail] = true; 
-    console.log(this.editing_detail); 
+  modifier_detail()
+  {
+    this.editing_detail[this.index_selected_detail] = true;  
+    this.index_api.getgeneralise("Mission","?menu=getmissionbyclient&id_client="+this.item_selected_detail[0].id).subscribe(resp_mis =>
+    {
+      this.all_mission = resp_mis.response;  
+    });
+    this.index_api.getgeneralise("Timesheet_detail","?menu=getsectionbymission&id_mission="+this.item_selected_detail[0].mission.id).subscribe(resp_sec =>
+    {          
+      this.all_section = resp_sec.response;
+    });
+    this.index_api.getgeneralise("Timesheet_detail","?menu=getsous_sectionbysection&id_section="+this.item_selected_detail[0].section.id).subscribe(resp_sec =>
+    {          
+      this.all_sous_section = resp_sec.response;
+    });
+    this.duree_cumule= parseFloat(this.item_selected_detail[0].duree_cumule) - parseFloat(this.item_selected_detail[0].duree);
+    this.new_item_detail = false ;
   }
 
   annuler_detail()
@@ -482,7 +538,7 @@ console.log(data);
       this.all_timesheet_detail = [...this.rows_timesheet_detail];
     }else
     {
-      this.rows_timesheet_detail[this.index_selected]=this.currentItem_detail;      
+      this.rows_timesheet_detail[this.index_selected_detail]=this.currentItem_detail;      
       this.rows_timesheet_detail = [...this.rows_timesheet_detail];
     }
   }
@@ -504,15 +560,20 @@ console.log(data);
     {
       id: this.item_selected_detail[0].id,
       supprimer: etat_suppression,
-      date_feuille: this.convertionDate(this.item_selected[0].date_feuille),
-      id_pers: this.currentpersonnel.id
+      id_client: this.item_selected_detail[0].client.id,
+      id_mission: this.item_selected_detail[0].mission.id,
+      id_section: this.item_selected_detail[0].section.id,
+      id_sous_section: this.item_selected_detail[0].sous_section.id,
+      pourcentage: this.item_selected_detail[0].pourcentage,
+      duree: this.item_selected_detail[0].duree,
+      id_entete: this.item_selected[0].id
     }
-
-console.log(data);
+    console.log(this.item_selected_detail[0]);
+  console.log(data);
     this.index_api.add('Timesheet_detail', this.convertion_data(data), config).subscribe((response) => {
      
 
-      if (!this.new_item) 
+      if (!this.new_item_detail) 
       {
         if (etat_suppression == 1) 
         {
@@ -525,7 +586,7 @@ console.log(data);
       else
       {
         this.new_item_detail = false;
-        this.rows_timesheet_detail[this.index_selected]['id'] = String(response['response']);
+        this.rows_timesheet_detail[this.index_selected_detail]['id'] = String(response['response']);
         this.all_timesheet_detail = [...this.rows_timesheet_detail];
       }
 
@@ -539,15 +600,119 @@ console.log(data);
   }
 
   updateValue_detail(e,c,i)
-  {
-    console.log(e);
-    console.log(c);
-    console.log(i);
-    //this.rows_timesheet_detail[i][c] = e.target.value;
+  {console.log(e);
+    this.rows_timesheet_detail[i][c] = e.target.value;
     
     //console.log(this.rows_timesheet_detail[i][c]);
   }
+  
+  updateValue_select_client(e,c,i)
+  {
+    var cli= this.all_client.filter(function(obj) {
 
+      return obj.id == e.value;
+    });
+    this.rows_timesheet_detail[i][c] = {id: String(e.value),nom_client: cli[0].nom_client};
+    this.rows_timesheet_detail[i]['mission.nom_client'] = cli[0].nom_client;
+    this.rows_timesheet_detail[i]['mission'] = {id: null,libelle: null};
+    this.rows_timesheet_detail[i]['section'] = {id: null,libelle: null};
+    this.rows_timesheet_detail[i]['sous_section'] = {id: null,libelle: null};
+    this.index_api.getgeneralise("Mission","?menu=getmissionbyclient&id_client="+e.value).subscribe(resp_mis =>
+      {
+        this.all_mission = resp_mis.response;  
+      });
+  }
+  updateValue_select_mission(e,c,i)
+  {
+    var mis= this.all_mission.filter(function(obj) {
+
+      return obj.id == e.value;
+    });
+    this.rows_timesheet_detail[i][c] = {id: String(e.value),libelle: mis[0].libelle};
+    this.rows_timesheet_detail[i]['section'] = {id: null,libelle: null};
+    this.rows_timesheet_detail[i]['sous_section'] = {id: null,libelle: null};
+    this.index_api.getgeneralise("Timesheet_detail","?menu=getsectionbymission&id_mission="+e.value).subscribe(resp_sec =>
+      {
+        if (resp_sec.response.length!=0)
+        {          
+          this.all_section = resp_sec.response;
+          console.log(this.all_section);
+        }
+        else
+        {
+          this.index_api.getAll("Section").subscribe(resp =>
+            {
+              this.all_section = resp.response;
+              console.log(this.all_section);
+            });
+        }
+        
+  
+      });
+  }
+  updateValue_select_section(e,c,i)
+  {
+    var sec= this.all_section.filter(function(obj) {
+
+      return obj.id == e.value;
+    });
+    this.rows_timesheet_detail[i][c] = {id: String(e.value),libelle: sec[0].libelle};
+    this.rows_timesheet_detail[i]['sous_section'] = {id: null,libelle: null};
+    this.index_api.getgeneralise("Timesheet_detail","?menu=getsous_sectionbysection&id_section="+e.value).subscribe(resp_sec =>
+      {          
+          this.all_sous_section = resp_sec.response;
+          console.log(resp_sec.response);
+      });
+  }
+  updateValue_duree(e,c,i,row)
+  {
+    if (e.target.value)
+    {
+      this.rows_timesheet_detail[i][c] = e.target.value;
+      var dure_cumul= parseFloat(e.target.value) +  parseFloat(this.duree_cumule);
+      this.rows_timesheet_detail[i]['duree_cumule'] =dure_cumul;
+    }
+    else
+    {
+      var dure_cumul= parseFloat(this.duree_cumule);
+      this.rows_timesheet_detail[i]['duree_cumule'] =dure_cumul;
+    }
+    
+    
+  }
+  updateValue_sous_section(e,c,i,row)
+  {var sous_sec= this.all_sous_section.filter(function(obj) {
+
+    return obj.id == e.value;
+  });
+  this.rows_timesheet_detail[i][c] = {id: String(e.value),libelle: sous_sec[0].libelle};
+    console.log(row);
+    this.index_api.getgeneralise("Timesheet_detail","?menu=getdureeanterieur&id_sous_section="+e.value+"&id_section="+row.section.id+"&id_mission="+row.mission.id).subscribe(resp_dur =>
+      {          
+          var duree = resp_dur.response;
+          console.log(resp_dur.response);
+          if (duree.length!=0)
+          {
+            if (duree[0].som)
+            {
+              this.rows_timesheet_detail[i]['duree_cumule'] = duree[0].som;
+              this.duree_cumule=duree[0].som;
+            }
+            else
+            {
+              this.rows_timesheet_detail[i]['duree_cumule'] = 0;
+              this.duree_cumule=0;
+            }
+          }
+          else
+          {
+            this.rows_timesheet_detail[i]['duree_cumule'] = 0;
+            this.duree_cumule=0;
+          }
+          
+          console.log(this.rows_timesheet_detail[i]['duree_cumule']);
+      });
+  }
 
   supprimer_detail()
   {
@@ -556,6 +721,10 @@ console.log(data);
   suppressionConfirmer_detail()
   {
     this.save_in_base_detail(1);
+  }
+  closeDialog()
+  {
+    this.dialog.closeAll();
   }
   
   /***********Fin Detail time sheet */   

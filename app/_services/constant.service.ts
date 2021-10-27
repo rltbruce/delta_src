@@ -6,5 +6,6 @@ import { Injectable } from '@angular/core';
 export class ConstantService {
 
  apiUrl = 'http://localhost/2020/delta/api/index.php/api/' ;
+ apiUrlFile = 'http://localhost/2020/delta/assets/' ;
   constructor() { }
 }

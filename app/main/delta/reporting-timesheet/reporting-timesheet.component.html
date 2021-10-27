@@ -1,0 +1,791 @@
+<div id="reporttimesheet" class="page-layout simple fullwidth tabbed" fxLayout="column">
+    <div class="content p-24" >        
+        <div class="mat-card mat-elevation-z4 p-24 " fxLayout="column" fxLayoutAlign="start" style="padding: 0!important;">
+            <div class="accent-900">
+                <div  class="package-type h-44 titre_bar" fxLayout="row" fxLayoutAlign="space-between center">
+                    <span class="p-12">
+                        <span class="border-right mr-2" >Reporting Time Sheet </span>                        
+                    </span>
+                </div>
+                <mat-divider></mat-divider>            
+                <div class="mt-8">
+                    <form name="filtreForm" [formGroup]="filtreForm" novalidate fxLayout="row" fxLayoutAlign="center center" fxLayout.xs="column">
+                        <div fxLayout="row" fxLayout.xs="column">  
+        
+                            <mat-form-field  fxFlex="100" class="pl-4" appearance="outline" style="width:320px;">
+                                <mat-label>Personnel</mat-label>
+                            
+                                <mat-select formControlName="id_personnel" [(ngModel)]="filtre.id_personnel" required (selectionChange)="resume_cette_semaine()">
+                                
+                                    <mat-option *ngFor="let personnal of allpersonnel" 
+                                        [value]="personnal.id" [attr.selected]="filtre.id_personnel==personnal.id ? true : null" >
+                                    {{personnal.nom}}
+                                    </mat-option>
+                                </mat-select>   
+                            </mat-form-field>                      
+                            <mat-form-field  fxFlex="100" class="pl-4 my-form-field" appearance="outline"> 
+                                <mat-label > Date début</mat-label > 
+                                <input  matInput [matDatepicker] = "picker" [(ngModel)]="filtre.date_debut" formControlName="date_debut" required> 
+                                <mat-datepicker-toggle  matSuffix [for] = "picker "> </mat-datepicker-toggle> 
+                                <mat-datepicker #picker> </mat-datepicker> 
+                                <mat-error>
+                                        Date obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field  fxFlex="100" class="pl-4" appearance="outline"> 
+                                <mat-label > Date de fin </mat-label > 
+                                <input  matInput [matDatepicker] = "picker1" [(ngModel)]="filtre.date_fin" formControlName="date_fin" required [disabled]="!filtre.date_debut"> 
+                                <mat-datepicker-toggle  matSuffix [for] = "picker1"> </mat-datepicker-toggle> 
+                                <mat-datepicker #picker1> </mat-datepicker> 
+                                <mat-error>
+                                        Date obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                       
+                        </div>
+                    
+                        <div class="ml-24">
+                            <button  mat-raised-button color="primary" class="submit-button" aria-label="CREATE AN FORM"
+                                [disabled]="filtreForm.invalid" (click)="timesheet_entetebydate_personnel()">
+                                Actualiser
+                            </button>
+                        </div>
+                      
+                    </form>
+                </div>
+                <div class="mat-card mat-elevation-z4 m-8">
+                    <mat-tab-group (selectedTabChange)="tabClick($event)" [(selectedIndex)]="tabindex">
+    
+                        <mat-tab label="DATE">
+                            <div  class="package-type h-44 primary-50 mt-4" fxLayout="row" fxLayoutAlign="space-between center">
+                                <span class="p-12">
+                                </span>
+                                <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                    placeholder="Rechercher..." (keyup)="updateFilter_date($event)" /></span>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div>
+                                <ngx-datatable class="material" [rows]="rows_timesheet_entete" [loadingIndicator]="loadingIndicator" [columnMode]="'force'"
+                                    [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable"
+                                    [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected" [selectionType]="'single'"
+                                    (select)="onSelect($event)">
+                                    <ngx-datatable-column name="Date" prop="date_feuille" [cellClass]="'my-custom-cell-global'">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>                                            
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Situation" prop="type" [cellClass]="'my-custom-cell-global'">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ affichage_type_situation(value) }}</span>                                            
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="DETAIL SITUATION" [disabled]="item_selected.length==0">
+                            <div *ngIf="type=='timesheet'">
+                                <ngx-datatable class="material" [rows]="rows_detail_situation" [loadingIndicator]="loadingIndicator_detail" [columnMode]="'force'"
+                                    [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_detail"
+                                    [selectionType]="'checkbox'" [limit]="10" [selectionType]="'single'"
+                                    >
+
+
+                                    <ngx-datatable-column name="CLIENT" prop="client.nom_client">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column name="MISSION" prop="mission.libelle">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    
+                                    <ngx-datatable-column name="SECTION" prop="section.libelle">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column name="SOUS SECTION" prop="sous_section.libelle">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row" >
+                                                <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column name="POURCENTAGE" prop="pourcentage">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }} <span *ngIf="value"> %</span></span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column name="HEURE CONSOMME" prop="duree">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}<span *ngIf="value"> Heures</span></span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="HEURE CUMULEE" prop="duree_cumule">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}<span *ngIf="value"> Heures</span></span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                </ngx-datatable>
+                            </div>
+                            <div *ngIf="type=='conge'">
+                                <ngx-datatable class="material" 
+                                [rows]="rows_detail_situation" 
+                                [loadingIndicator]="loadingIndicator_detail" 
+                                [columnMode]="'force'"
+                                [headerHeight]="48" 
+                                [footerHeight]="56" 
+                                [rowHeight]="'auto'" 
+                                [scrollbarH]="true" 
+                                [reorderable]="reorderable_detail"
+                                [selectionType]="'checkbox'" 
+                                [limit]="10"  
+                                [selectionType]="'single'">
+                                    
+                                    <ngx-datatable-column name="Motif" prop="motif">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ formatDate(value) }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                        <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                <span>{{ formatDate(value) }}</span>
+                                            </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Date de retour" prop="date_retour" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ formatDate(value) }}</span>
+                                        </ng-template>
+                                </ngx-datatable-column>
+                                    <ngx-datatable-column name="Reste congé" prop="reste_conge">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span >{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Personnel" prop="personnel_conge.nom">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Personnel" prop="personnel_validation.nom">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Validation" prop="validation">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ affichage_validation(value) }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                </ngx-datatable>
+                            </div>
+                            <div *ngIf="type=='absence'">
+                                <ngx-datatable class="material" 
+                                [rows]="rows_detail_situation" 
+                                [loadingIndicator]="loadingIndicator_absence" 
+                                [columnMode]="'force'"
+                                [headerHeight]="48" 
+                                [footerHeight]="56" 
+                                [rowHeight]="'auto'" 
+                                [scrollbarH]="true" 
+                                [reorderable]="reorderable_detail"
+                                [selectionType]="'checkbox'" 
+                                [limit]="10" 
+                                [selectionType]="'single'">
+        
+        
+                                    <ngx-datatable-column name="Type" prop="type">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ affichage_type(value)}}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                    <ngx-datatable-column name="Motif" prop="motif">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ formatDate(value) }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Duree" prop="duree">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                        <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                <span>{{ formatDate(value) }}</span>
+                                               
+                                            </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Personnel" prop="personnel_absent.nom">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Personnel" prop="personnel_validation.nom">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ value }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Validation" prop="validation">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <span>{{ affichage_validation(value) }}</span>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    
+                                </ngx-datatable>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="RESUME DE LA SEMAINE">
+                            <div class="tab-content p-24">
+                                <!-- PUT YOUR TAB CONTENT HERE -->
+                                <div>
+                                    <ngx-datatable class="material striped" 
+                                            [rows]="rows_timesheet_resume" 
+                                            [loadingIndicator]="loadingIndicator_resume" 
+                                            [columnMode]="'flex'"
+                                            [headerHeight]="48" 
+                                            [footerHeight]="56" 
+                                            [rowHeight]="'auto'"  
+                                            [scrollbarH]="true"
+                                            [reorderable]="reorderable_resume"
+                                            [limit]="10" >            
+            
+            
+                                    <ngx-datatable-column name="LUNDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.LUNDI" style="padding: 0!important;">
+                                                <div *ngIf="row.LUNDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.LUNDI" cel-border>
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table>
+
+                                                </div>
+                                                <div *ngIf="row.LUNDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.LUNDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.LUNDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+                                            </div> 
+                                                                  
+                                        </ng-template>
+                                    </ngx-datatable-column> 
+                                    <ngx-datatable-column name="MARDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.MARDI" style="padding: 0!important;">
+                                                <div *ngIf="row.MARDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.MARDI">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table>
+
+                                                </div>
+                                                <div *ngIf="row.MARDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.MARDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.MARDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="MERCREDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.MERCREDI">
+                                                <div *ngIf="row.MERCREDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.MERCREDI">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table>
+
+                                                </div>
+                                                <div *ngIf="row.MERCREDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.MERCREDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.MERCREDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+                                            </div>
+                                                                    
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="JEUDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.JEUDI">
+                                                <div *ngIf="row.JEUDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.JEUDI">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table>
+
+                                                </div>
+                                                <div *ngIf="row.JEUDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.JEUDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.JEUDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+                                            </div>    
+                                                                    
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="VENDREDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.VENDREDI">
+                                                <div *ngIf="row.VENDREDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.VENDREDI">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table> 
+
+                                                </div>
+                                                <div *ngIf="row.VENDREDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.VENDREDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.VENDREDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="SAMEDI" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.SAMEDI">
+                                                <div *ngIf="row.SAMEDI[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.SAMEDI">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table> 
+
+                                                </div>
+                                                <div *ngIf="row.SAMEDI[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.SAMEDI[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.SAMEDI[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+                                            </div>
+                                                                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="DIMANCHE" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                            <div *ngIf="row.DIMANCHE">
+                                                <div *ngIf="row.DIMANCHE[0].type=='timesheet'">
+                                                    <mat-table [dataSource]="row.DIMANCHE">
+                                                        <ng-container  matColumnDef="client">
+                                                            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="mission">
+                                                            <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="section">
+                                                            <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="soustache">
+                                                            <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                        </ng-container>
+                                                        <ng-container  matColumnDef="duree">
+                                                            <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                            <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                        </ng-container>
+                                                        <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                        <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                    </mat-table> 
+
+                                                </div>
+                                                <div *ngIf="row.DIMANCHE[0].type=='conge'">
+                                                    <span>CONGE
+                                                    </span>
+                                                </div>
+                                                <div *ngIf="row.DIMANCHE[0].type=='absence'">
+                                                    <span style="font-weight: bold; font-size: 16;">
+                                                        {{affichage_type_absence(row.DIMANCHE[0].type_absence)}}
+                                                    </span>
+                                                </div> 
+
+                                            </div>                   
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    </ngx-datatable>
+                                </div>
+                                <!-- / PUT YOUR TAB CONTENT HERE -->
+                            </div>
+                        </mat-tab>
+                        
+                        <mat-tab label="ETAT" [disabled]="!filtre.date_fin" >
+                            <div class="ngx_fils">
+                                <ngx-datatable class="material"  
+                                                [loadingIndicator]="loadingIndicator" 
+                                                [columnMode]="'flex'"
+                                                [headerHeight]="48" 
+                                                [footerHeight]="56" 
+                                                [rowHeight]="'auto'"  
+                                                [scrollbarH]="true"
+                                                [reorderable]="reorderable"
+                                                [limit]="10"  
+                                                [rows]="all_timesheet_etat">
+                                    
+                                    <ngx-datatable-column [name]="col.key" *ngFor="let col of rows_timesheet_etat | keyvalue" [flexGrow]="1" [minWidth]="500">
+                                        <ng-template ngx-datatable-cell-template>
+                                            <div fxLayout="column" fxLayoutAlign="space-between center">
+                                                <span style="padding: 5px;">{{ affichage_type_situation(col.value.type) }}</span>
+                                            </div>
+                                            <div *ngIf="col.value.type=='timesheet'" class="ngxfilsfils">
+                                                <!--mat-table [dataSource]="col.value.timesheet" class="mat-elevation-z8">
+                                                    <ng-container  matColumnDef="client">
+                                                        <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="mission">
+                                                        <mat-header-cell *matHeaderCellDef>Mission</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.mission.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="section">
+                                                        <mat-header-cell *matHeaderCellDef>Section</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.section.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="soustache">
+                                                        <mat-header-cell *matHeaderCellDef>Sous section</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.sous_section.libelle}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="duree">
+                                                        <mat-header-cell *matHeaderCellDef>Durée</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.duree}} heures</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table--> 
+                                                <ngx-datatable class="material striped"  
+                                                [loadingIndicator]="loadingIndicator" 
+                                                [columnMode]="'force'"
+                                                [headerHeight]="48" 
+                                                [footerHeight]="56" 
+                                                [rowHeight]="'auto'"  
+                                                [scrollbarH]="true"
+                                                [reorderable]="reorderable"
+                                                [limit]="10"  
+                                                [rows]="col.value.timesheet">
+                                                
+                                                    <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }} heures</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                            </ngx-datatable>
+    
+                                            </div>
+                                            <div *ngIf="col.value.type=='conge'" class="ngxfilsfils">
+                                                <!--mat-table [dataSource]="col.value.conge">
+                                                    <ng-container  matColumnDef="motif">
+                                                        <mat-header-cell *matHeaderCellDef>Motif</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.motif}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="date_debut">
+                                                        <mat-header-cell *matHeaderCellDef>Date de debut</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.date_debut}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="date_fin">
+                                                        <mat-header-cell *matHeaderCellDef>Date fin</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.date_fin}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="validation">
+                                                        <mat-header-cell *matHeaderCellDef>Validation</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{affichage_validation_conge(element.validation)}}</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns_conge"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns_conge; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table-->
+                                                <ngx-datatable class="material striped"  
+                                                [loadingIndicator]="loadingIndicator" 
+                                                [columnMode]="'force'"
+                                                [headerHeight]="48" 
+                                                [footerHeight]="56" 
+                                                [rowHeight]="'auto'"  
+                                                [scrollbarH]="true"
+                                                [reorderable]="reorderable"
+                                                [limit]="10"  
+                                                [rows]="col.value.conge">
+                                                
+                                                    <ngx-datatable-column name="Motif" prop="motif" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Validation" prop="validation" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ affichage_validation_conge(value) }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                            </ngx-datatable> 
+                                            </div>
+                                            <div *ngIf="col.value.type=='absence'" class="ngxfilsfils">
+                                                <!--mat-table [dataSource]="col.value.absence">
+                                                    <ng-container  matColumnDef="motif">
+                                                        <mat-header-cell *matHeaderCellDef>Motif</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.motif}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="date_debut">
+                                                        <mat-header-cell *matHeaderCellDef>Date de debut</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.date_debut}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="date_fin">
+                                                        <mat-header-cell *matHeaderCellDef>Date fin</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{element.date_fin}}</mat-cell>
+                                                    </ng-container>
+                                                    <ng-container  matColumnDef="validation">
+                                                        <mat-header-cell *matHeaderCellDef>Validation</mat-header-cell>
+                                                        <mat-cell *matCellDef="let element">{{affichage_validation_conge(element.validation)}}</mat-cell>
+                                                    </ng-container>
+                                                    <mat-header-row *matHeaderRowDef="tableColumns_conge"></mat-header-row>
+                                                    <mat-row *matRowDef="let row; columns: tableColumns_conge; let entry"
+                                                    (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+                                                </mat-table-->
+                                                <ngx-datatable class="material striped"  
+                                                [loadingIndicator]="loadingIndicator" 
+                                                [columnMode]="'force'"
+                                                [headerHeight]="48" 
+                                                [footerHeight]="56" 
+                                                [rowHeight]="'auto'"  
+                                                [scrollbarH]="true"
+                                                [reorderable]="reorderable"
+                                                [limit]="10"  
+                                                [rows]="col.value.absence">
+                                                
+                                                    <ngx-datatable-column name="Motif" prop="motif" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ value }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                                    <ngx-datatable-column name="Validation" prop="validation" [cellClass]="'my-custom-cell-global'">
+                                                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                            <span>{{ affichage_validation_conge(value) }}</span>                                            
+                                                        </ng-template>
+                                                    </ngx-datatable-column>
+                                            </ngx-datatable> 
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-column> 
+                                </ngx-datatable>
+
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

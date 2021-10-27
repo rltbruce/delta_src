@@ -19,6 +19,15 @@ export const navigation: FuseNavigation[] = [
            
 
             },
+            {
+                id       : 'chat',
+                title    : 'Chat',
+                //translate: 'NAV.SAMPLE.TITLE',
+                type     : 'item',
+                icon     : 'home',
+                url      : '/chat'           
+
+            },
              {
                 id       : 'Administration',
                 title    : 'Administration',
@@ -177,7 +186,7 @@ export const navigation: FuseNavigation[] = [
             },
              {
                 id       : 'documents',
-                title    : 'Documents',
+                title    : 'Documents inside',
                 //translate: 'NAV.SAMPLE.TITLE',
                 type     : 'collapsable',
                 icon     : 'home',
@@ -185,11 +194,11 @@ export const navigation: FuseNavigation[] = [
                 children : [
                 {
                     id       : 'dc1',
-                    title    : 'Suivi',
+                    title    : 'Suivi doc',
                     //translate: 'NAV.SAMPLE.TITLE',
                     type     : 'item',
                    // icon     : 'home',
-                    url  : '/apps/dashboards/project'
+                    url  : '/document'
          
                },
                {
@@ -228,7 +237,7 @@ export const navigation: FuseNavigation[] = [
                     //translate: 'NAV.SAMPLE.TITLE',
                     type     : 'item',
                     //icon     : 'home',
-                    url  : '/apps/dashboards/project'
+                    url  : '/conge'
          
                },
                {
@@ -237,7 +246,7 @@ export const navigation: FuseNavigation[] = [
                     //translate: 'NAV.SAMPLE.TITLE',
                     type     : 'item',
                     //icon     : 'home',
-                    url  : '/apps/dashboards/project'
+                    url  : '/absence'
          
                },
                {
@@ -251,8 +260,25 @@ export const navigation: FuseNavigation[] = [
                }
              
               ]
-             } 
+             },
+             {
+                id       : 'rpt',
+                title    : 'Reporting',
+                //translate: 'NAV.SAMPLE.TITLE',
+                type     : 'collapsable',
+                icon     : 'home',
 
+                children : [
+                {
+                    id       : 'tmsheet',
+                    title    : 'Time sheet',
+                    //translate: 'NAV.SAMPLE.TITLE',
+                    type     : 'item',
+                    //icon     : 'home',
+                    url  : '/reportingTimeSheet'
+         
+               }]
+             }
             /*]
         }*/
         ];

@@ -21,8 +21,8 @@ export class IndexApiService {
     }));
   }
 
-  getAllByClient(controller,idcl) {//DP
-    return this.http.get<any>(this.constantService.apiUrl+controller+"?idcl="+idcl);
+  getAllByClient(controller,idcl,parametre) {//DP
+    return this.http.get<any>(this.constantService.apiUrl+controller+"?idcl="+idcl+"&?parametre="+parametre);
   }
   getgeneralise(controller,filtre) {
     return this.http.get<any>(this.constantService.apiUrl+controller+filtre);

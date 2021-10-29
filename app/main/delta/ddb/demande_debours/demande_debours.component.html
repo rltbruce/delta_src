@@ -1,0 +1,711 @@
+<div class="page-layout simple tabbed">
+
+    <!-- HEADER -->
+    <div class="header accent p-24 h-20" fxLayout="row" fxLayoutAlign="start center">
+        <h1>Demande de Debours</h1>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <mat-tab-group dynamicHeight="true" (selectedTabChange)="changetab($event)">
+
+            <mat-tab label="Client">
+                <div class="p-24">
+                    
+                        <!--form name="clientForm" [formGroup]="clientForm" novalidate fxLayout="column" fxLayoutAlign="center left" fxLayout.xs="row">
+                            <mat-form-field  fxFlex="100" class="pl-4" appearance="outline" fxFlex style="width:320px;margin-top:10px;height:20px;">
+                                <mat-label>Client</mat-label>
+                            
+                                <mat-select (selectionChange)="changeclient($event)" formControlName="id" required>
+                                   
+                                    <mat-option *ngFor="let grd of row_client" [value]="grd.id">
+                                        {{grd.nom_client}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field>
+                        </form--> 
+
+                        <ngx-datatable
+                       
+                        class="material"
+                        [rows]="row_client"
+                        [loadingIndicator]="loadingIndicator"
+                        [columns]="columns_c"
+                        [columnMode]="'force'"
+                        [headerHeight]="48"
+                        [footerHeight]="50"
+                        [rowHeight]="'auto'"
+                       
+                        [reorderable]="reorderable"
+                        [selected]="selected_c"
+                        [selectionType]="'single'"
+                        
+                        (select)='onSelectClient($event)'
+                        [limit]="10"
+                       >
+
+                      
+                        
+                     
+                        <!--ngx-datatable-column name="Code" fxFlex="30" fxFlex style="width:120px;">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                              {{row.num_contrat}}
+                            </ng-template>
+                          </ngx-datatable-column>
+                        
+                          <ngx-datatable-column name="Date du contrat" fxFlex="70" fxFlex style="width:620px;">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                               {{row.date_contrat}}
+                            </ng-template>
+                          </ngx-datatable-column--> 
+                          <ngx-datatable-column name="Code" prop="code"></ngx-datatable-column>
+                          <ngx-datatable-column name="Nom client" prop="nom_client"></ngx-datatable-column>  
+                        
+                         
+
+                    </ngx-datatable>
+
+                  
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Liste de missions">
+              
+                <div class="p-4">
+                   
+                    <ngx-datatable
+                    #table
+                     class="material"
+                     [rows]="row_prd"
+                     [loadingIndicator]="loadingIndicator"
+                     [columns]="columns_m"
+                     [columnMode]="'force'"
+                     [headerHeight]="5"
+                     [footerHeight]="25"
+                     [rowHeight]="'35'"
+                  
+                     [reorderable]="reorderable"
+                     [selected]="selected_m"
+                     [selectionType]="'single'"
+                     (activate)="onActivate($event)"
+                     (select)='onSelectmission($event)'
+                    >
+                     
+                  
+                     <ngx-datatable-column name="Code">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                           {{row.code}}
+                         </ng-template>
+                       </ngx-datatable-column>
+                     
+                       <ngx-datatable-column name="Libellé">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.libelle}}
+                         </ng-template>
+                       </ngx-datatable-column>   
+                      
+                      
+
+                 </ngx-datatable>
+                  
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Demande de Debours">
+                <div class="p-4">
+                   
+                    <button  matTooltip="Ajouter" (click)="ajouter_produit()"  class="ml-4" style="width: 10%;">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button  matTooltip="Modifier" (click)="modifier_produit()"  class="ml-4" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button  matTooltip="Supprimer" (click)="supprimer_produit()"  class="ml-4" *ngIf="afficherboutonproduit" class="ml-4" style="width: 10%;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <span style="margin-left: 400px;"><strong>Client :{{nomclient}}  </strong></span>
+                    
+                </div>
+                <div class="p-4">
+                    <ngx-datatable
+                           #table
+                            class="material"
+                            [rows]="row_demande"
+                            [loadingIndicator]="loadingIndicator"
+                            [columns]="columns_m"
+                            [columnMode]="'force'"
+                            [headerHeight]="5"
+                            [footerHeight]="35"
+                            [rowHeight]="'35'"
+                         
+                            [reorderable]="reorderable"
+                            [selected]="selected_demande"
+                            [selectionType]="'single'"
+                            (activate)="onActivate($event)"
+                            (select)='onSelectdemande($event)'
+                           >
+                           <ngx-datatable-column name="Nom du client">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                               {{row.nom_client}}
+                            </ng-template>
+                          </ngx-datatable-column>
+                           <ngx-datatable-column name="Mission">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                               {{row.libelle}}
+                            </ng-template>
+                          </ngx-datatable-column>  
+                         
+                            <ngx-datatable-column name="Code">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                  {{row.num_demande}}
+                                </ng-template>
+                              </ngx-datatable-column>
+                            
+                              <ngx-datatable-column name="Date de demande">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.date_demande}}
+                                </ng-template>
+                              </ngx-datatable-column>   
+                              <ngx-datatable-column name="Demandeur">
+                                <ng-template let-row="row" ngx-datatable-cell-template>
+                                   {{row.nompersonnel}}
+                                </ng-template>
+                              </ngx-datatable-column>  
+                             
+                             
+
+                        </ngx-datatable>
+                </div>
+            </mat-tab>
+
+        </mat-tab-group>
+        <mat-tab-group dynamicHeight="true" (selectedTabChange)="changetab1($event)">
+
+            <mat-tab label="Details de debours">
+                <div class="p-4">
+                   
+                    <button  matTooltip="Ajouter" (click)="ajouter_honoraire()"  class="ml-4" style="width: 10%;" *ngIf="!editprevhn">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button  matTooltip="Modifier" (click)="modifier_honoraire()"  class="ml-4" *ngIf="afficherboutonhonoraire && !editprevhn" class="ml-4" style="width: 10%;">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button  matTooltip="Supprimer" (click)="supprimer_honoraire()"  class="ml-4" *ngIf="afficherboutonhonoraire && !editprevhn" class="ml-4" style="width: 10%;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button  matTooltip="Sauver" [disabled]="test_honoraire(selected_detdem[0])" (click)="ajout_honoraire(debours,0)"  class="ml-4" *ngIf="editprevhn" class="ml-4" style="width: 10%;">
+                        <mat-icon>save</mat-icon>
+                    </button>
+                    <button  matTooltip="Annuler"  (click)="annuler_honoraire()"  class="ml-4" *ngIf="editprevhn" class="ml-4" style="width: 10%;">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                  
+                </div>
+                <div class="p-4">
+                    <ngx-datatable
+                    #table
+                     class="material"
+                     [rows]="row_detdeb"
+                     [loadingIndicator]="loadingIndicator"
+                     [columns]="columns_detdeb"
+                     [columnMode]="'force'"
+                     [headerHeight]="5"
+                     [footerHeight]="25"
+                     [rowHeight]="'35'"
+                     [reorderable]="reorderable"
+                     [scrollbarH]="true"
+                     [selected]="selected_detdem"
+                     [selectionType]="'single'"
+                     [footerHeight]="50"
+                     (activate)="onActivate($event)"
+                     (select)='onSelectdetdemande($event)'                           
+                    >
+                     
+                  
+                     <ngx-datatable-column name="Debours" [maxWidth]="180" [minWidth]="160" [width]="200" [frozenLeft]="true">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                            <span *ngIf="!row.edit">
+                           {{row.libdebours}}
+                           </span>
+                           <span *ngIf="row.edit">
+                            <mat-select (selectionChange)="changedebours(row)"  [(ngModel)]="row.id_debours"  style="min-width:150px;max-width:700px" required>
+                          
+                                <mat-option *ngFor="let grd of rows_debours" [value]="grd.id">
+                                    {{grd.libelle}}
+                                </mat-option>
+                             </mat-select>   
+                           </span>
+                         </ng-template>
+                       </ngx-datatable-column>
+                     
+                       <ngx-datatable-column name="Personnel"  fxFlex="30" class="pl-4"  fxFlex  [maxWidth]="180" [minWidth]="180" [width]="200" [frozenLeft]="true">
+                         <ng-template let-row="row"  ngx-datatable-cell-template>
+                             <span *ngIf="!row.edit">
+                            {{row.nompersonnel}}
+                            </span>
+                            <span *ngIf="row.edit">
+                                
+                                 <mat-select (selectionChange)="changepers(row)"  [(ngModel)]="row.id_pers"  style="min-width:150px;max-width:700px;" required>
+                          
+                                    <mat-option *ngFor="let prs of rows_pers" [value]="prs.id">
+                                        {{prs.nom}}
+                                    </mat-option>
+                                 </mat-select>   
+                             </span>
+                         </ng-template>
+                       </ngx-datatable-column>
+                         
+                       <ngx-datatable-column name="Région" fxFlex="30" class="pl-4" style="width:120px"  [maxWidth]="180" [minWidth]="160" [width]="200" [cellClass]="'tete'" [headerClass]="'tete'">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                           
+                            <span *ngIf="!row.edit">
+                                {{row.nomregion}}
+                            </span>
+                            <span *ngIf="row.edit">
+                                
+                                <mat-select (selectionChange)="changeregion(row)"  [(ngModel)]="row.id_region"  style="min-width:150px;max-width:700px" required>
+                         
+                                   <mat-option *ngFor="let reg of rows_region" [value]="reg.id">
+                                       {{reg.libelle}}
+                                   </mat-option>
+                                </mat-select>   
+                            </span>
+                         </ng-template>
+                       </ngx-datatable-column>
+                       
+                       <!--ngx-datatable-column name="Localité" style="width:120px"  [maxWidth]="180" [minWidth]="160" [width]="200">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                            
+                            <span *ngIf="!row.edit">
+                                {{row.localite}}
+                            </span>
+                            <span *ngIf="row.edit">
+                                    
+                                    <input  type="text" name="Localite" [(ngModel)]="row.localite" 
+                                     placeholder="Localite"  appearance="outline" class="pl-4"
+                                     style="min-width:30px;max-width:120px" required>
+                            </span>
+                         </ng-template>
+                       </ngx-datatable-column-->  
+                       
+                       <!--ngx-datatable-column name="Duree totale" style="width:120px" [cellClass]="'textalg'" [headerClass]="'textright'" [maxWidth]="150" [minWidth]="120">
+                         <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.nbre_jour*row.nbre_homme}}
+                         </ng-template>
+                       </ngx-datatable-column--> 
+                       <ngx-datatable-column  name="Date debut/Fin"  [maxWidth]="160" [minWidth]="140" [width]="180" [cellClass]="'tete'" [headerClass]="'tete'" >
+                        <ng-template let-row="row" ngx-datatable-cell-template   >
+                          
+                           <span *ngIf="!row.edit" >
+                               <li>
+                               {{row.date_debut }}
+                            </li>
+                            <li>
+                               {{row.date_fin }}
+                            </li>
+                           </span>
+                           <span *ngIf="row.edit">
+                                   
+                                   <input  type="date" name="Date debut" [(ngModel)]="row.date_debut" 
+                                   (ngModelChange)="changejour(row)" placeholder="Date debut"  appearance="outline" class="pl-4"
+                                   style="min-width:30px;max-width:140px" required>
+
+                                  
+
+
+                           </span>
+                        </ng-template>
+                      </ngx-datatable-column>
+                       <ngx-datatable-column name="Nbre jours"  [maxWidth]="100" [minWidth]="80" [width]="100" [cellClass]="'tete'" [headerClass]="'tete'">
+                        <ng-template let-row="row" ngx-datatable-cell-template   >
+                          
+                           <span *ngIf="!row.edit" >
+                               
+                               {{row.nbre_jours }}
+                          
+                           </span>
+                           <span *ngIf="row.edit">
+                                   
+                                   <input  type="number" name="nbre_jours" [(ngModel)]="row.nbre_jours" 
+                                   (ngModelChange)="changejour(row)" placeholder="Nombre jours"  appearance="outline" class="pl-4"
+                                    style="min-width:30px;max-width:60px;" required>
+                           </span>
+                        </ng-template>
+                      </ngx-datatable-column> 
+                      <!--ngx-datatable-column name="Nbre heure"  [maxWidth]="140" [minWidth]="120" [width]="200">
+                        <ng-template let-row="row" ngx-datatable-cell-template   >
+                          
+                           <span *ngIf="!row.edit" >
+                               
+                               {{row.nbre_heure }}
+                          
+                           </span>
+                           <span *ngIf="row.edit">
+                                   
+                                   <input  type="number" name="Nombre heure" [(ngModel)]="row.nbre_heure" 
+                                   (ngModelChange)="changejour()" placeholder="Prix unitaire"  appearance="outline" class="pl-4"
+                                   style="min-width:30px;max-width:120px" required>
+                           </span>
+                        </ng-template>
+                      </ngx-datatable-column--> 
+                       <ngx-datatable-column name="Prix Unitaire" [cellClass]="'textalg'" [headerClass]="'textright'" [maxWidth]="120" [minWidth]="100" [width]="160">
+                         <ng-template let-row="row" ngx-datatable-cell-template   >
+                           
+                            <span *ngIf="!row.edit" >
+                                
+                                {{(row.pu*1)|number }}
+                           
+                            </span>
+                            <span *ngIf="row.edit">
+                                    
+                                    <input  type="number" name="Prix Unitaire" [(ngModel)]="row.pu" 
+                                    (ngModelChange)="changejour(row)" placeholder="Prix unitaire"  appearance="outline" class="pl-4"
+                                    style="min-width:30px;max-width:100px;margin-left: 40px;" required>
+                            </span>
+                         </ng-template>
+                       </ngx-datatable-column>
+                      
+                       <ngx-datatable-column name="Montant total" [cellClass]="'textalg'" [headerClass]="'textright'" [maxWidth]="120" [minWidth]="120" [width]="200">
+                         <ng-template let-row="row" ngx-datatable-cell-template >
+                            {{(row.pu*row.nbre_jours)|number }}
+                         </ng-template>
+                       </ngx-datatable-column>
+                     
+                      <!--ngx-datatable-column name="Date fin" [cellClass]="'textalg'" [headerClass]="'textright'" [maxWidth]="100" [minWidth]="80" [width]="200">
+                        <ng-template let-row="row" ngx-datatable-cell-template   >
+                          
+                           <span >
+                               
+                               {{row.date_fin }}
+                          
+                           </span>
+                         
+                        </ng-template>
+                      </ngx-datatable-column-->
+                       <!--a *ngIf="editprevhn" ng-click="vm.sauverDetail(avancement,0)">
+                        <span class="icon-content-save"></span>
+                        </a-->
+                       
+                       <ngx-datatable-footer *ngIf="true" [cellClass]="'textalg'">
+                         <ng-template
+                           ngx-datatable-footer-template
+                           let-rowCount="rowCount"
+                           let-pageSize="pageSize"
+                           let-selectedCount="selectedCount"
+                           let-curPage="curPage"
+                           let-offset="offset"
+                         >
+                           <div style="margin-left:990px;!important">
+                             <div><strong>{{somme|number}} </strong></div>
+                             <hr style="width:100%" />
+                            
+                           </div>
+                         </ng-template>
+                       </ngx-datatable-footer>
+                       
+
+                 </ngx-datatable>   
+                 
+               
+
+                </div>    
+            </mat-tab>
+          
+            
+        </mat-tab-group>    
+        <div class="p-24">
+            <ng-template #suppressionDialog>
+                <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement produit?</h2>
+                <mat-dialog-content>      
+                  
+                </mat-dialog-content>
+                <mat-dialog-actions align="end">
+                  <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_produit()">Ok</button>
+                  <button mat-button matDialogClose color="primary">Fermer</button>
+                </mat-dialog-actions>
+              </ng-template>
+              <ng-template #suppressionDialoghn>
+                <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement honoraire?</h2>
+                <mat-dialog-content>      
+                  
+                </mat-dialog-content>
+                <mat-dialog-actions align="end">
+                  <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_honoraire()">Ok</button>
+                  <button mat-button matDialogClose color="primary">Fermer</button>
+                </mat-dialog-actions>
+              </ng-template>
+
+              <ng-template #suppressionDialogdeb>
+                <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement debours?</h2>
+                <mat-dialog-content>      
+                  
+                </mat-dialog-content>
+                <mat-dialog-actions align="end">
+                  <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_debours()">Ok</button>
+                  <button mat-button matDialogClose color="primary">Fermer</button>
+                </mat-dialog-actions>
+              </ng-template>
+
+              <ng-template #saisieDialog >
+                <p><b>Formulaire du Contrat</b></p>
+                <div class="divform" >
+                    <form name="deboursForm" [formGroup]="deboursForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                      <div class="centerinput">
+                        <input type="hidden" formControlName="id" [(ngModel)]="debours.id">
+                        <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                            <mat-label>Numero du Contrat</mat-label>
+                            <input matInput formControlName="num_contrat" [(ngModel)]="debours.num_contrat">
+                            <mat-error>
+                                Numero obligatoire
+                            </mat-error>
+                        </mat-form-field>
+                       
+                        
+                           <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Date du contrat</mat-label>
+                                <input matInput formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                                <mat-error>
+                                    Date obligatoire
+                                </mat-error>
+                            </mat-form-field-->
+            
+                            <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Date du contrat</mat-label>
+                                <input matInput [matDatepicker]="startDatePicker" name="start" formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #startDatePicker></mat-datepicker>
+                            </mat-form-field-->
+            
+            
+                            <mat-form-field fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Date du contrat</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="date_contrat" [(ngModel)]="debours.date_contrat">
+                                <mat-datepicker-toggle matSuffix [for]="picker">
+                                  <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+            
+                            <!--mat-form-field appearance="fill">
+                                <mat-label>Choose a date</mat-label>
+                                <input matInput [matDatepicker]="picker">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field-->
+            
+            
+            
+                          </div>
+                          <div>
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                <mat-label>Montant HT</mat-label>
+                                <input type="number" matInput formControlName="montant_ht" [(ngModel)]="debours.montant_ht"  />
+                                
+                            </mat-form-field>
+                           
+                            
+                               <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                    <mat-label>Monnaie</mat-label>
+                                    <input matInput formControlName="monnaie" [(ngModel)]="debours.monnaie">
+                                    
+                                </mat-form-field-->
+            
+                                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                    <mat-label>Monnaie</mat-label>
+                                    <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                    <mat-select (selectionChange)="changemonnaie($event)" formControlName="monnaie" [(ngModel)]="debours.monnaie" required>
+                                        <!--mat-option [value]="'United States of America'">
+                                            United States of America
+                                        </mat-option-->
+                                        <mat-option *ngFor="let grd of rows_monnaie" [value]="grd.id">
+                                            {{grd.libelle}}
+                                        </mat-option>
+                                     </mat-select>   
+                                </mat-form-field>
+            
+            
+            
+                          </div>
+                          <!--div>
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                <mat-label>Adresse</mat-label>
+                                <input matInput formControlName="adresse" [(ngModel)]="debours.adresse">
+                                
+                            </mat-form-field>
+                          </div-->
+               </form>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <button (click)="ajout(debours,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                    [disabled]="deboursForm.invalid">
+                    Enregistrer
+                </button>
+                <button (click)="annuler()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                    ANNULER
+                </button>
+            </div>
+            
+             </ng-template>
+             <ng-template #missionDialog>
+               
+                <p><b>Formulaire de la demande de debours</b></p>
+                    <!--Debut-->
+                    <div class="divform" >
+                                       <form name="deboursForm2" [formGroup]="deboursForm2" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                        <div class="centerinput">
+                                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:320px;" >
+                                                <mat-label>Nom du client</mat-label>
+                                                <input matInput readonly  formControlName="nom_client" [(ngModel)]="produit.nom_client" >
+                                                
+                                            </mat-form-field> 
+                                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:400px;" >
+                                                <mat-label>Mission</mat-label>
+                                                <input matInput readonly formControlName="libelle" [(ngModel)]="produit.libelle">
+                                               
+                                            </mat-form-field>
+                                         
+                                        </div>   
+                                       <div class="centerinput">
+                                               
+                                           <input type="hidden" formControlName="id" [(ngModel)]="produit.id">
+                                           <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                               <mat-label>Numero demande</mat-label>
+                                               <input matInput formControlName="num_demande" [(ngModel)]="produit.num_demande">
+                                               <mat-error>
+                                                   Numero obligatoire
+                                               </mat-error>
+                                           </mat-form-field>
+            
+                                           <mat-form-field fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
+                                            <mat-label>Date du contrat</mat-label>
+                                            <input matInput [matDatepicker]="picker" formControlName="date_demande" [(ngModel)]="produit.date_demande">
+                                            <mat-datepicker-toggle matSuffix [for]="picker">
+                                              <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                                            </mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                          </mat-form-field>
+            
+                                       </div>
+                                       <div>
+                                           
+                                        <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:520px;">
+                                            <mat-label>Demandeur</mat-label>
+                                            <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                            <mat-select  formControlName="id_demandeur" [(ngModel)]="produit.id_demandeur" required>
+                                                <!--mat-option [value]="'United States of America'">
+                                                    United States of America
+                                                </mat-option-->
+                                                <mat-option *ngFor="let pers of row_personnel" [value]="pers.id">
+                                                    {{pers.nom}}
+                                                </mat-option>
+                                             </mat-select>   
+                                        </mat-form-field>
+                                        
+                                       
+                                       </div>
+                                    
+                                         
+                                       <div fxLayout="row" fxLayoutAlign="start start">
+                                           <button (click)="ajout_produit(produit,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                               [disabled]="deboursForm2.invalid">
+                                               Enregistrer
+                                           </button>
+                                           <button (click)="annuler_produit()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                               ANNULER
+                                           </button>
+                                       </div>
+                                       </form>
+                                   </div>
+                    <!--Fin-->
+                   
+                
+             </ng-template>
+
+             <ng-template #honoraireDialog>
+                <p><b>Formulaire des Prévisions honoraires</b></p>
+                <div class="divform" >
+                    <form name="honoraireForm" [formGroup]="honoraireForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                        <div class="centerinput">
+                                               
+                            <input type="hidden" formControlName="id" [(ngModel)]="honoraire.id">
+                            <!--mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                <mat-label>Grade</mat-label>
+                                <input matInput formControlName="grade" [(ngModel)]="honoraire.grade">
+                                <mat-error>
+                                    Grade obligatoire
+                                </mat-error>
+                            </mat-form-field-->
+
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:520px;">
+                                <mat-label>Grade</mat-label>
+                                <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
+                                <mat-select (selectionChange)="changegrade($event)" formControlName="grade" [(ngModel)]="honoraire.grade" required>
+                                   
+                                    <mat-option *ngFor="let grd of rows_grade" [value]="grd.id">
+                                        {{grd.libelle}}
+                                    </mat-option>
+                                 </mat-select>   
+                            </mat-form-field>
+
+
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:220px;" >
+                                <mat-label>Nombre Jours</mat-label>
+                                <input matInput formControlName="nbre_jour" [(ngModel)]="honoraire.nbre_jour">
+                                <mat-error>
+                                    Nombre Jours obligatoire
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>    
+                        <div class="centerinput">
+                                               
+                            
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:120px;" >
+                                <mat-label>Nombre Jours/Homme</mat-label>
+                                <input matInput formControlName="nbre_homme" [(ngModel)]="honoraire.nbre_homme">
+                                <mat-error>
+                                    Nombre Homme obligatoire
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;" >
+                                <mat-label>Nombre Heure</mat-label>
+                                <input matInput formControlName="nbre_heure" [(ngModel)]="honoraire.nbre_heure">
+                                <mat-error>
+                                    Nombre Heure obligatoire
+                                </mat-error>
+                            </mat-form-field>
+
+                        </div>    
+                        <div class="centerinput">
+                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;" >
+                                <mat-label>Prix Unitaire</mat-label>
+                                <input matInput formControlName="pu" [(ngModel)]="honoraire.pu">
+                                <mat-error>
+                                    Prix Unitaire obligatoire
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="start start">
+                            <button (click)="ajout_honoraire(honoraire,0)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                [disabled]="honoraireForm.invalid">
+                                Enregistrer
+                            </button>
+                            <button (click)="annuler_produit()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                                ANNULER
+                            </button>
+                        </div>
+                    </form>  
+                </div>      
+             </ng-template>   
+
+
+
+        </div>
+
+    </div>
+    <!-- / CONTENT -->
+
+</div>

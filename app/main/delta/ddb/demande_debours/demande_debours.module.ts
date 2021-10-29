@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../../../../_helpers/auth.guard';
-import { MissionComponent } from './mission.component';
+import { Demande_deboursComponent } from './demande_debours.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,8 +25,8 @@ import {MatTooltipModule} from '@angular/material/Tooltip';
 
 const routes = [
   {
-      path     : 'mission',
-      component: MissionComponent, canActivate: [AuthGuard]
+      path     : 'demandedeb',
+      component: Demande_deboursComponent, canActivate: [AuthGuard]
   }
 ];
 
@@ -44,7 +44,7 @@ export const MY_DATE_FORMATS = {
 
 @NgModule({
   declarations: [
-    MissionComponent
+    Demande_deboursComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -78,7 +78,7 @@ providers: [
 ]
  
 })
-export class MissionModule 
+export class Demande_deboursModule 
 {
 
  }

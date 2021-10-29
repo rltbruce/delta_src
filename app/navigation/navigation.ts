@@ -61,6 +61,12 @@ export const navigation: FuseNavigation[] = [
                         url  : '/debours'
                     },
                     {
+                        id   : 'reg',
+                        title: 'Region',
+                        type : 'item',
+                        url  : '/region'
+                    },
+                    {
                         id   : 'prd',
                         title: 'Produit',
                         type : 'item',
@@ -128,7 +134,7 @@ export const navigation: FuseNavigation[] = [
                     //translate: 'NAV.SAMPLE.TITLE',
                     type     : 'item',
                     //icon     : 'home',
-                     url  : '/apps/dashboards/project'
+                     url  : '/demandedeb'
          
                },
                {

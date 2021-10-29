@@ -103,7 +103,7 @@
                        
                         
                            <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
-                                <mat-label>Nom du client</mat-label>
+                                <mat-label>Nom du personnel</mat-label>
                                 <input matInput formControlName="nom" [(ngModel)]="debours.nom">
                                 <mat-error>
                                     Nom obligatoire
@@ -119,7 +119,7 @@
                            
                             
                                <mat-form-field  fxFlex="30" class="pl-4" appearance="outline" fxFlex style="width:620px;">
-                                    <mat-label>Grade</mat-label>
+                                    <mat-label>Grade du personnel</mat-label>
                                     <!--input matInput formControlName="grade" [(ngModel)]="debours.grade"-->
                                     <mat-select (selectionChange)="changegrade($event)" formControlName="grade" [(ngModel)]="debours.grade" required>
                                         <!--mat-option [value]="'United States of America'">

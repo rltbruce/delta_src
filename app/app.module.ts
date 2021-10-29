@@ -22,10 +22,12 @@ import { DeboursModule } from 'app/main/delta/ddb/debours/debours.module';
 import { SectionModule } from 'app/main/delta/ddb/section/section.module';
 import { GradeModule } from 'app/main/delta/ddb/grade/grade.module';
 import { ProduitModule} from 'app/main/delta/ddb/produit/produit.module';
+import { RegionModule} from 'app/main/delta/ddb/region/region.module';
 import { ClientModule } from 'app/main/delta/ddb/client/client.module';
 import { TacheModule } from 'app/main/delta/ddb/tache/tache.module';
 import { PersonnelModule } from 'app/main/delta/ddb/personnel/personnel.module';
 import { MissionModule } from 'app/main/delta/ddb/mission/mission.module';
+import { Demande_deboursModule } from 'app/main/delta/ddb/demande_debours/demande_debours.module';
 import { AlertComponent } from './_components/alert/alert.component';
 import { LoginComponent } from './main/auth/login/login.component';
 import { SampleComponent } from '../app/main/sample/sample.component';
@@ -42,6 +44,8 @@ import { ClientComponent } from './main/delta/ddb/client/client.component';
 import { TacheComponent } from './main/delta/ddb/tache/tache.component';
 import { PersonnelComponent } from './main/delta/ddb/personnel/personnel.component';
 import { MissionComponent } from './main/delta/ddb/mission/mission.component';
+import { Demande_deboursComponent } from './main/delta/ddb/demande_debours/demande_debours.component';
+import { RegionComponent } from './main/delta/ddb/region/region.component';
 
 
 const appRoutes: Routes = [
@@ -56,6 +60,8 @@ const appRoutes: Routes = [
     declarations: [
         AppComponent,
         AlertComponent,
+       
+       
         //AccueilComponent
         
        
@@ -71,12 +77,14 @@ const appRoutes: Routes = [
         // Material moment date module
         MatMomentDateModule,
         DeboursModule,
+        RegionModule,
         GradeModule,
         ProduitModule,
         ClientModule,
         TacheModule,
         PersonnelModule,
         MissionModule,
+        Demande_deboursModule,
         SectionModule,
 
         // Material

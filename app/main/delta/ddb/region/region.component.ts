@@ -31,11 +31,11 @@ import { MatCheckbox } from '@angular/material/checkbox';
   }
 
   @Component({
-  selector: 'app-debours',
-  templateUrl: './debours.component.html',
-  styleUrls: ['./debours.component.scss']
+  selector: 'app-region',
+  templateUrl: './region.component.html',
+  styleUrls: ['./region.component.scss']
 })
-export class DeboursComponent implements OnInit{
+export class RegionComponent implements OnInit{
 
 NouvelItem  : boolean;
     currentItem : any;
@@ -122,9 +122,7 @@ NouvelItem  : boolean;
       id        : [''],
       code      : ['', Validators.required],
       libelle: ['', Validators.required],
-      nature   : ['',Validators.required],
-      type_deb   : ['',''],
-      unitaire   : ['','']
+      
     });
     this.deboursForm2 = this._formBuilder.group(
       {
@@ -139,7 +137,7 @@ NouvelItem  : boolean;
         
     
 
-    this.index_api.getAll('Debours').subscribe((response) =>
+    this.index_api.getAll('Region').subscribe((response) =>
     {      
       this.rows_debours = response['response'];
       this.rows_actuel=this.rows_debours;
@@ -198,28 +196,24 @@ NouvelItem  : boolean;
   }
 
   updateFilter(event) {
-    console.log("filtrer");
-   
+    
     const val = event.target.value.toLowerCase();
-    console.log(val);
-
+   
     this.rows_debours=this.rows_actuel;
-    console.log(this.rows_debours);
+   
     let keys = Object.keys(this.rows_debours[0]);
     let colsAmt = this.columns.length;
-    console.log("Keys");
-    console.log(keys);
+   
     this.rows_debours =this.rows_debours.filter(function(obj) {
       
       if(val)
       {
        //return obj.libelle.toLowerCase().indexOf(val)!==-1 || !val;
-       //colsAmt=4;
+      
       for (let i=0; i<colsAmt; i++){
-        
+
         // check for a match
-        if(obj[keys[i]])
-        {
+  
         if (obj[keys[i]].toString().toLowerCase().indexOf(val) !== -1 || !val){
   
           // found match, return true to add to result set
@@ -227,7 +221,6 @@ NouvelItem  : boolean;
           return true;
   
         }
-      }
   
       }
      
@@ -318,7 +311,7 @@ NouvelItem  : boolean;
 
       let insert_data = this.serializeData(data);
       
-      this.index_api.add('Debours',insert_data , config).subscribe((response) =>
+      this.index_api.add('Region',insert_data , config).subscribe((response) =>
       {
         //this.selectedItem.nom_client=client.nom_client;
         if (this.NouvelItem == false) 
@@ -330,10 +323,7 @@ NouvelItem  : boolean;
               
               this.selectedItem.libelle  = debours.libelle;
               this.selectedItem.code        = debours.code;
-              this.selectedItem.type_deb   = debours.type_deb;
-              this.selectedItem.nature     = debours.nature;
-              this.selectedItem.unitaire     = debours.unitaire;
-            
+             
             
             } 
             else 
@@ -353,9 +343,7 @@ NouvelItem  : boolean;
                         id        :String(response.response) ,
                         libelle: debours.libelle,
                         code      : debours.code,
-                        type_deb : debours.type_deb,
-                        nature   : debours.nature,
-                        unitaire     : debours.unitaire
+                      
                        
                     };
             this.rows_debours.unshift(item); 
@@ -392,8 +380,7 @@ NouvelItem  : boolean;
         id        : event.row.id,
         code      : event.row.code,
         libelle   : event.row.libelle,
-        type_deb  : event.row.type_deb,
-        nature    : event.row.nature
+        
        
       }
      

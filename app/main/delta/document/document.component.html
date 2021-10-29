@@ -1,0 +1,510 @@
+<div id="document" class="page-layout simple fullwidth tabbed" fxLayout="column" >
+    <div class="tab-content p-24">
+        <div class="accent-900 p-28" fxLayout="column" fxLayoutAlign="space-around stretch">
+            <!--div class="accent-900 mb-8">
+                Selectioné client et puis mission pour lister les documents
+            </div-->
+            <div fxLayout="row" fxLayoutAlign="space-around stretch">                    
+                <!-- PUT YOUR TAB CONTENT HERE -->
+                <div class="mat-card mat-elevation-z4" fxFlex="45">
+                    <mat-divider class="primary-50"></mat-divider>
+                    <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12">
+                            <span class="border-right mr-2" >Client</span>         
+                        </span>
+                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." (keyup)="updateFilter_client($event)" /></span>
+                    </div>
+                    <mat-divider class="primary-50"></mat-divider>
+                    <div>
+                        <ngx-datatable class="material materials" [rows]="rows_client" [loadingIndicator]="loadingIndicator_client" [columnMode]="'force'"
+                            [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_client"
+                            [selectionType]="'checkbox'" [limit]="2" [selected]="item_selected_client" [selectionType]="'single'"
+                            [cellClass]="'my-custom-cell-global'" (select)="onSelect_client($event)"> 
+
+                            <ngx-datatable-column name="Nom" prop="nom_client">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>                    
+                            
+                            <ngx-datatable-column name="Adresse" prop="adresse">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Télephone" prop="telephone">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            
+                        </ngx-datatable>
+                    </div>
+                    
+                </div>
+                <!-- / PUT YOUR TAB CONTENT HERE -->
+                <div fxFlex="4">
+                    <mat-icon>keyboard_tab</mat-icon>
+                </div>
+                <!-- PUT YOUR TAB CONTENT HERE -->
+                <div class="mat-card mat-elevation-z4" fxFlex="45">
+                    <mat-divider class="primary-50"></mat-divider>
+                    <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12">
+                            <span class="border-right mr-2" >Mission</span>         
+                        </span>
+                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." (keyup)="updateFilter_client($event)" /></span>
+                    </div>
+                    <mat-divider class="primary-50"></mat-divider>
+                    <div>
+                        <ngx-datatable class="material" [rows]="rows_mission" [loadingIndicator]="loadingIndicator_mission" [columnMode]="'force'"
+                            [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_mission"
+                            [selectionType]="'checkbox'" [limit]="2" [selected]="item_selected_mission" [selectionType]="'single'"
+                            (select)="onSelect_mission($event)"> 
+
+                            <ngx-datatable-column name="Code" prop="code">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>                    
+                            
+                            <ngx-datatable-column name="Libelle" prop="libelle">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Chef mission" prop="chef_mission.nom">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            
+                        </ngx-datatable>
+                    </div>
+                    
+                </div>
+                <!-- / PUT YOUR TAB CONTENT HERE -->
+            </div>
+        </div>
+        
+        <!-- PUT YOUR TAB CONTENT HERE -->
+        <div class="mat-card mat-elevation-z4  m-4">             
+            <mat-tab-group (selectedTabChange)="tabClick($event)" [(selectedIndex)]="tabindex">
+        
+                <mat-tab label="DOCUMENT">
+                    <div class="mat-card mat-elevation-z4  m-4">
+                        <mat-divider></mat-divider>
+                        <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span class="p-12">
+                                <span class="border-right mr-2" >DOCUMENT </span>
+                                
+                                <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="ajouter()" *ngIf="!new_item && item_selected.length==0  && item_selected_mission.length!=0 ">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifier()"
+                                    *ngIf="item_selected.length > 0 && !editing[index_selected]">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="item_selected.length > 0 && !editing[index_selected]" (click)="supprimer()">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+            
+            
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="editing[index_selected]
+                                    && item_selected[0].type_link==1
+                                    && item_selected[0].type_document!=null 
+                                    && item_selected[0].description!=null && item_selected[0].prepare_par.id!=null
+                                    && item_selected[0].date_preparation!=null && item_selected[0].repertoire!=null"
+                                    (click)="save_in_base(0)">
+                                    <mat-icon>save</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="editing[index_selected]
+                                    && item_selected[0].type_link==2
+                                    && item_selected[0].type_document!=null && item_selected[0].link.id!=null
+                                    && item_selected[0].description!=null && item_selected[0].prepare_par.id!=null
+                                    && item_selected[0].date_preparation!=null && item_selected[0].repertoire!=null"
+                                    (click)="save_in_base(0)">
+                                    <mat-icon>save</mat-icon>
+                                </button>
+            
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler()"
+                                    *ngIf="item_selected.length > 0">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>           
+                            </span>
+                            <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." (keyup)="updateFilter($event)" /></span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_document" [loadingIndicator]="loadingIndicator" [columnMode]="'force'"
+                                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable"
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected" [selectionType]="'single'"
+                                (select)="onSelect($event)"> 
+            
+                                <ngx-datatable-column name="Sous tâche" prop="sous_tache.libelle" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing[rowIndex]">{{ value }}</span>
+                                        <span *ngIf="editing[rowIndex]">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_select_sous_tache($event, 'sous_tache', rowIndex)" [(value)]="row.sous_tache.id" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option *ngFor="let sous_ta of all_sous_tache" 
+                                                        [value]="sous_ta.id" [attr.selected]="row.sous_tache.id==sous_ta.id ? true : null" >
+                                                    {{sous_ta.libelle}}
+                                                    </mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Type link" prop="type_link"[width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing[rowIndex]">{{ affichage_link(value) }}</span>
+                                        <span *ngIf="editing[rowIndex]">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_select_type_link($event, 'type_link', rowIndex)" [(value)]="row.type_link" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option [value]="1">Normal</mat-option>
+                                                    <mat-option [value]="2">Master</mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Link" prop="link.description" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing[rowIndex]">{{ value }}</span>
+                                        <span *ngIf="!editing[rowIndex] && row.type_link!=2"> -/-</span>
+                                        <span *ngIf="editing[rowIndex] && row.type_link==2">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_select_link($event, 'link', rowIndex)" [(value)]="row.link.id" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option *ngFor="let link of all_link" 
+                                                        [value]="link.id" [attr.selected]="row.link.id==link.id ? true : null" >
+                                                    {{link.description}}
+                                                    </mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                        <span *ngIf="editing[rowIndex] && row.type_link!=2"> -/-</span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Type document" prop="type_document" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing[rowIndex]">{{ affichage_document(value) }}</span>
+                                        <span *ngIf="editing[rowIndex]">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_select_type_document($event, 'document', rowIndex)" [(value)]="row.type_document" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option [value]="1">Provisoire</mat-option>
+                                                    <mat-option [value]="2">Définitif</mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>  
+                                <ngx-datatable-column name="Date d'insertion" prop="date_insertion" [cellClass]="'my-custom-cell-global'" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span >{{ formatDate(value) }}</span>
+                                    </ng-template>
+                                </ngx-datatable-column>  
+                                <ngx-datatable-column name="Date de préparation" prop="date_preparation" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing[rowIndex]" >{{ formatDate(value) }}</span>
+                                        <span *ngIf="editing[rowIndex]"> 
+                                            <input  [max]="datenow" [matDatepicker] = "picker" (dateInput)="updateValue($event, 'date_preparation', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                            <mat-datepicker-toggle  matSuffix [for] = "picker" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                            <mat-datepicker  #picker style="display: inline-block !important;"> </mat-datepicker>
+                                            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>                  
+                                
+                                <ngx-datatable-column name="Description" prop="description" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing[rowIndex]">{{ value }}</span>
+                                        <input  *ngIf="editing[rowIndex]" type="text" (keyup)="updateValue($event, 'description', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Préparer par" prop="prepare_par.nom" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing[rowIndex]">{{ value }}</span>
+                                        <span *ngIf="editing[rowIndex]">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_select_prepare_par($event, 'prepare_par', rowIndex)" [(value)]="row.prepare_par.id" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option *ngFor="let util of all_utilisateur" 
+                                                        [value]="util.id" [attr.selected]="row.prepare_par.id==util.id ? true : null" >
+                                                    {{util.nom}}
+                                                    </mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>                    
+                                <ngx-datatable-column name="Répértoire" prop="repertoire" [minWidth]="300">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <div style="display: inline-flex;align-items: baseline; box-sizing: border-box;">           
+                                            <span *ngIf="editing[rowIndex]">{{ value }}</span>
+                                            <span *ngIf="!editing[rowIndex]" (click)="onclick_download(value)" 
+                                            matTooltip="Clicquer ici pour télécharger" class="mouseurl" style="color: steelblue;">{{ value }}</span>
+                                            <input  *ngIf="editing[rowIndex]" type="file" (change)="updateValue_repertoire($event.target.files, 'repertoire', rowIndex)" [value]="" />
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Utilisateur" prop="utilisateur.nom" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span >{{ value}}</span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                
+                            </ngx-datatable>
+                        </div>
+                        
+                    </div>
+                    <!-- / PUT YOUR TAB CONTENT HERE -->
+                </mat-tab>
+        
+                <mat-tab label="REVIEWED BY" [disabled]="!item_selected[0]">
+                    <div class="mat-card mat-elevation-z4  m-4">
+                        <mat-divider></mat-divider>
+                        <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span class="p-12">
+                                <span class="border-right mr-2" >REVIEWED BY </span>
+                                
+                                <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="ajouter_commentaire()" *ngIf="!new_item_commentaire && item_selected_commentaire.length==0">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifier_commentaire()"
+                                    *ngIf="item_selected_commentaire.length > 0 && !editing_commentaire[index_selected_commentaire]">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="item_selected_commentaire.length > 0 && !editing_commentaire[index_selected_commentaire]" (click)="supprimer_commentaire()">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="editing_commentaire[index_selected_commentaire]
+                                    && item_selected_commentaire[0].observation!=null"
+                                    (click)="save_in_base_commentaire(0)">
+                                    <mat-icon>save</mat-icon>
+                                </button>
+            
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler_commentaire()"
+                                    *ngIf="item_selected_commentaire.length > 0">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>           
+                            </span>
+                            <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." (keyup)="updateFilter_commentaire($event)" /></span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_document_commentaire" [loadingIndicator]="loadingIndicator_commentaire" [columnMode]="'force'"
+                                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_commentaire"
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_commentaire" [selectionType]="'single'"
+                                (select)="onSelect_commentaire($event)">                    
+                                
+                                <!--ngx-datatable-column name="Type histoire" prop="type_histoire">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_commentaire[rowIndex]">{{ value }}</span>
+                                        <input  *ngIf="editing_commentaire[rowIndex]" type="text" (change)="updateValue_commentaire($event, 'type_histoire', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column-->                    
+                                <ngx-datatable-column name="Reviewed by" prop="utilisateur.nom">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <div style="display: inline-flex;align-items: baseline; box-sizing: border-box;">           
+                                            <span>{{ value }}</span>
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="review note" prop="observation">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_commentaire[rowIndex]">{{ value }}</span>
+                                        <textarea [matTextareaAutosize]="true" name="observa" *ngIf="editing_commentaire[rowIndex]" type="text" (keyup)="updateValue_commentaire($event, 'observation', rowIndex)" [value]="value"></textarea>
+                                        <!--input  *ngIf="editing_commentaire[rowIndex]" type="text" (change)="updateValue_commentaire($event, 'observation', rowIndex)" [value]="value" /-->
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Date review" prop="date_histoire" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span>{{ formatDate(value) }}</span>
+                                        <!--span *ngIf="editing_commentaire[rowIndex]"> 
+                                            <input  [max]="datenow" [matDatepicker] = "picker2" (dateInput)="updateValue_commentaire($event, 'date_histoire', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                            <mat-datepicker-toggle  matSuffix [for] = "picker2" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                            <mat-datepicker  #picker2 style="display: inline-block !important;"> </mat-datepicker>
+                                            
+                                        </span-->
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                
+                            </ngx-datatable>
+                        </div>
+                        
+                    </div>
+                    <!-- / PUT YOUR TAB CONTENT HERE -->
+                </mat-tab>
+                <mat-tab label="DOCUMENT TYPE" [disabled]="!item_selected_mission[0]">
+                    <div class="mat-card mat-elevation-z4  m-4">
+                        <mat-divider></mat-divider>
+                        <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                            <span class="p-12">
+                                <span class="border-right mr-2" >DOCUMENT TYPE </span>
+                                
+                                <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter"
+                                (click)="ajouter_document_type()" *ngIf="!new_item_document_type && item_selected_mission.length!=0 ">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier" (click)="modifier_document_type()"
+                                    *ngIf="item_selected_document_type.length > 0 && !editing_document_type[index_selected_document_type]">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="item_selected_document_type.length > 0 && !editing_document_type[index_selected_document_type]" (click)="supprimer_document_type()">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+            
+            
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                    *ngIf="editing_document_type[index_selected_document_type]
+                                    && item_selected_document_type[0].description!=null && item_selected_document_type[0].prepare_par.id!=null
+                                    && item_selected_document_type[0].date_preparation!=null && item_selected_document_type[0].repertoire!=null"
+                                    (click)="save_in_base_document_type(0)">
+                                    <mat-icon>save</mat-icon>
+                                </button>
+            
+                                <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler_document_type()"
+                                    *ngIf="item_selected_document_type.length > 0">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>           
+                            </span>
+                            <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                                placeholder="Rechercher..." (keyup)="updateFilter_document_type($event)" /></span>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div>
+                            <ngx-datatable class="material" [rows]="rows_document_type" [loadingIndicator]="loadingIndicator_document_type" [columnMode]="'force'"
+                                [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'" [scrollbarH]="true" [reorderable]="reorderable_document_type"
+                                [selectionType]="'checkbox'" [limit]="10" [selected]="item_selected_document_type" [selectionType]="'single'"
+                                (select)="onSelect_document_type($event)"> 
+                                
+                                <ngx-datatable-column name="Description" prop="description" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_document_type[rowIndex]">{{ value }}</span>
+                                        <input  *ngIf="editing_document_type[rowIndex]" type="text" (keyup)="updateValue_document_type($event, 'description', rowIndex)" [value]="value" />
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Préparer par" prop="prepare_par.nom" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span  *ngIf="!editing_document_type[rowIndex]">{{ value }}</span>
+                                        <span *ngIf="editing_document_type[rowIndex]">
+                                            <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                                <mat-select (selectionChange)="updateValue_document_type_select_prepare_par($event, 'prepare_par', rowIndex)" [(value)]="row.prepare_par.id" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                    
+                                                    <mat-option *ngFor="let util of all_utilisateur" 
+                                                        [value]="util.id" [attr.selected]="row.prepare_par.id==util.id ? true : null" >
+                                                    {{util.nom}}
+                                                    </mat-option>
+                                                </mat-select>
+            
+                                            </mat-form-field>
+            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>                    
+                                <ngx-datatable-column name="Répértoire" prop="repertoire" [minWidth]="300">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <div style="display: inline-flex;align-items: baseline; box-sizing: border-box;">           
+                                            <span *ngIf="editing_document_type[rowIndex]">{{ value }}</span>
+                                            <span *ngIf="!editing_document_type[rowIndex]" (click)="onclick_download_document_type(value)" 
+                                            matTooltip="Clicquer ici pour télécharger" class="mouseurl" style="color: steelblue;">{{ value }}</span>
+                                            <input  *ngIf="editing_document_type[rowIndex]" type="file" (change)="updateValue_document_type_repertoire($event.target.files, 'repertoire', rowIndex)" [value]="" />
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Date de préparation" prop="date_preparation" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_document_type[rowIndex]" >{{ formatDate(value) }}</span>
+                                        <span *ngIf="editing_document_type[rowIndex]"> 
+                                            <input  [max]="datenow" [matDatepicker] = "picker" (dateInput)="updateValue_document_type($event, 'date_preparation', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                            <mat-datepicker-toggle  matSuffix [for] = "picker" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                            <mat-datepicker  #picker style="display: inline-block !important;"> </mat-datepicker>
+                                            
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Date d'insertion" prop="date_insertion" [cellClass]="'my-custom-cell-global'" [width]="200">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span >{{ formatDate(value) }}</span>
+                                    </ng-template>
+                                </ngx-datatable-column> 
+                                <ngx-datatable-column name="Utilisateur" prop="utilisateur.nom" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span >{{ value}}</span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                
+                            </ngx-datatable>
+                        </div>
+                        
+                    </div>
+                    <!-- / PUT YOUR TAB CONTENT HERE -->
+                </mat-tab>
+
+            </mat-tab-group>
+        </div>
+    </div>
+</div>
+
+<ng-template #suppressionDialog>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+  
+<ng-template #suppressionDialog_commentaire>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_commentaire()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+  <ng-template #suppressionDialog_document_type>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_document_type()">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="closeDialog_document_type()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>

@@ -1,0 +1,318 @@
+@import "src/@fuse/scss/fuse";
+
+#chat {
+
+    .center {
+        padding: 32px !important;
+        //max-width: 1400px;
+        margin: 0 auto;
+
+       /* @include media-breakpoint('lt-lg') {
+            padding: 0 !important;
+        }*/
+
+        .content-card {
+            //position: relative;
+            display: flex;
+            flex: 1;
+            border-radius: 8px;
+
+            .mat-sidenav-container {
+                display: flex;
+                flex: 1;
+                width: 100%;
+
+               /* > .mat-sidenav-content,
+                > .mat-drawer-content {
+                    display: flex;
+                    flex: 1 1 auto;
+                    min-height: 100%;
+                    height: auto;
+                }
+
+                > .mat-drawer-content {
+                    max-width: 100%;
+                }*/
+
+                mat-sidenav {
+                    //border: 1px solid red;
+                    min-width: 45%;
+                    max-width: 45%;
+                   /* display: flex;
+                    flex-direction: column;
+                    //width: 400px;
+                    min-width: 30%;
+                    //max-width: 90%;
+                    overflow: hidden;*/
+                }
+                .sidenavright
+                {
+                    min-width: 55%;
+                    max-width: 55%;
+                }
+                .search {
+                    height: 36px;
+                    line-height: 36px;
+                    padding: 8px;
+                    font-size: 13px;
+                    border-radius: 18px;
+                    border: 1px solid #babdc5;
+                    overflow: hidden;
+    
+                    .mat-icon {
+                        margin: 0;
+                    }
+    
+                    input {
+                        padding: 0 12px 0 8px;
+                        height: 36px;
+                        border: none;
+                    }
+                }
+                /*.ngx-datatable.scroll-vertical .datatable-body {
+                    overflow-y: scroll !important;
+                }   */
+                mat-list{
+                    
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
+                    padding: 0;
+                    border-right: 1px solid;
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+               /* .clasfix
+                {
+                    position: -webkit-sticky;
+                    position: sticky;
+                    top: 0;
+                    padding: 5px;
+                    background-color: #ffffff;
+                }*/
+                .no-v-scroll {
+                    height: 100%;
+                    overflow-y: hidden; 
+                    display: flex; 
+                    flex-direction: column;
+                  }
+                  .selected {
+                    background: rgb(161, 219, 230) !important;
+                  }
+                  .chat-footer {
+                    border-top: 1px solid #babdc5;
+                    padding: 8px 8px 8px 16px;
+        
+                    .reply-form {
+                        position: relative;
+        
+                        .message-text {
+                            padding: 16px 8px;
+        
+                            .mat-form-field-wrapper {
+                                padding: 0;
+        
+                                .mat-form-field-flex {
+                                    padding: 0;
+        
+                                    .mat-form-field-infix {
+                                        padding: 0;
+                                        border: none;
+                                        border-radius: 20px;
+                                        border: 1px solid #babdc5;
+        
+                                        textarea {
+                                            overflow: hidden;
+                                            margin: 16px 48px 16px 16px;
+                                            width: calc(100% - 64px);
+                                            padding: 0;
+                                        }
+                                    }
+                                }
+        
+                                .mat-form-field-underline {
+                                    display: none !important;
+                                }
+                            }
+                        }
+        
+                        .send-message-button {
+                            position: absolute;
+                            right: 16px;
+                            bottom: 21px;
+                        }
+                    }
+                }
+                
+                #chat-content {
+                    background: transparent;
+                    overflow: auto;
+                    -webkit-overflow-scrolling: touch;
+        
+                    .chat-messages {
+                        position: relative;
+                        padding: 16px 0 40px 40px;
+        
+                        .message-row {
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            justify-content: flex-end;
+                            padding: 0 40px 4px 16px;
+        
+                            .avatar {
+                                position: absolute;
+                                left: -32px;
+                                margin: 0;
+                            }
+        
+                            .bubble {
+                                position: relative;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 12px;
+                                max-width: 100%;
+                                
+        
+                                .message {
+                                    white-space: pre-wrap;
+                                    line-height: 1.2;
+                                }
+        
+                                .time {
+                                    position: absolute;
+                                    display: none;
+                                    width: 100%;
+                                    font-size: 11px;
+                                    margin-top: 8px;
+                                    top: 100%;
+                                    left: 0;
+                                    white-space: nowrap;
+                                }
+                                .boutonparmessage
+                                {
+                                    position: absolute;
+                                    //display: none;
+                                    //width: 100%;
+                                    font-size: 11px;
+                                    //margin-top: 8px;
+                                    //margin-left: 25px;
+                                    //margin-top: 5px;
+                                    //top: 100%;
+                                    left: 100%;
+                                    white-space: nowrap;
+                                    padding:0;
+                                    button
+                                    {
+                                        padding: 0 !important;
+                                    }
+                                }
+                            }
+        
+                            &.receive {
+        
+                                .bubble {
+                                    border-top-left-radius: 5px;
+                                    border-bottom-left-radius: 5px;
+        
+                                    border-top-right-radius: 20px;
+                                    border-bottom-right-radius: 20px;
+                                    background-color: rgb(4, 153, 223);
+                                    color: whitesmoke;
+        
+                                    .time {
+                                        margin-left: 12px;
+                                    }
+                                }
+        
+                                &.first-of-group {
+        
+                                    .bubble {
+                                        border-top-left-radius: 20px;
+                                    }
+                                }
+        
+                                &.last-of-group {
+        
+                                    .bubble {
+                                        border-bottom-left-radius: 20px;
+                                    }
+                                }
+                            }
+        
+                            &.send {
+                                padding-left: 40px;
+        
+                                .avatar {
+                                    order: 2;
+                                    margin: 0 0 0 16px;
+                                }
+        
+                                .bubble {
+                                    margin-left: auto;
+        
+                                    border-top-left-radius: 20px;
+                                    border-bottom-left-radius: 20px;
+        
+                                    border-top-right-radius: 5px;
+                                    border-bottom-right-radius: 5px;
+                                    color: rgba(0, 0, 0, 0.87);
+                                    background-color: #E0E0E0;
+        
+                                    .time {
+                                        justify-content: flex-end;
+                                        right: 0;
+                                        margin-right: 12px;
+                                    }
+                                }
+        
+                                &.first-of-group {
+        
+                                    .bubble {
+                                        border-top-right-radius: 20px;
+                                    }
+                                }
+        
+                                &.last-of-group {
+        
+                                    .bubble {
+                                        border-bottom-right-radius: 20px;
+                                    }
+                                }
+                            }
+        
+                            &.receive + .send,
+                            &.send + .receive {
+                                padding-top: 20px;
+                                margin-top: 20px;
+                            }
+        
+                            &.first-of-group {
+        
+                                .bubble {
+                                    border-top-left-radius: 20px;
+                                    padding-top: 13px;
+                                }
+                            }
+        
+                            &.last-of-group {
+        
+                                .bubble {
+                                    border-bottom-left-radius: 20px;
+                                    padding-bottom: 13px;
+        
+                                    .time {
+                                        display: flex;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

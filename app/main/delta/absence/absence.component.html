@@ -1,0 +1,169 @@
+<div class="page-layout simple fullwidth tabbed" fxLayout="column">
+
+    <!-- CONTENT -->
+
+    <div class="content p-24" >
+        <div class="mat-card mat-elevation-z4 p-24 " fxLayout="column" fxLayoutAlign="start" style="padding: 0!important;">
+            <div class="tab-content p-24">
+                <!-- PUT YOUR TAB CONTENT HERE -->
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <mat-divider></mat-divider>
+                    <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12">
+                            <span class="border-right mr-2" >ANBSENCE /MALADIE / PERMISSION </span>
+                            
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter_absence"
+                                (click)="ajouter_absence()" *ngIf="!new_item_absence && item_selected_absence.length==0" matTooltip="Ajouter">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier_absence" (click)="modifier_absence()"
+                                *ngIf="item_selected_absence.length > 0 && !editing_absence[index_selected_absence] && item_selected_absence[0].validation==0" matTooltip="Modifier">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_absence.length > 0 && !editing_absence[index_selected_absence] && item_selected_absence[0].validation==0" (click)="supprimer_absence()" matTooltip="Supprimer" >
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_absence.length > 0 && !editing_absence[index_selected_absence] && item_selected_absence[0].validation==0" (click)="valider_absence(0)" matTooltip="Valider" style="color: rgb(49, 167, 49);">
+                                <mat-icon>done_all</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_absence.length > 0 && !editing_absence[index_selected_absence] && item_selected_absence[0].validation==0" (click)="rejeter_absence(0)" matTooltip="Rejeter" style="color: orangered;">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="editing_absence[index_selected_absence] && item_selected_absence[0].personnel_absent.id!=null &&
+                                 item_selected_absence[0].type!=null && item_selected_absence[0].motif!=null
+                                 && item_selected_absence[0].date_debut!=null && item_selected_absence[0].date_fin!=null 
+                                 && item_selected_absence[0].duree>0"
+                                 (click)="verification_avant_save(0)">
+                                <mat-icon>save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler_absence()"
+                                *ngIf="item_selected_absence.length > 0" matTooltip="Annuler">
+                                <mat-icon>cancel</mat-icon>
+                            </button>           
+                        </span>
+                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." (keyup)="updateFilter_absence($event)" /></span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div>
+                        <ngx-datatable class="material" 
+                        [rows]="rows_absence" 
+                        [loadingIndicator]="loadingIndicator_absence" 
+                        [columnMode]="'force'"
+                        [headerHeight]="48" 
+                        [footerHeight]="56" 
+                        [rowHeight]="'auto'" 
+                        [scrollbarH]="true" 
+                        [reorderable]="reorderable_absence"
+                        [selectionType]="'checkbox'" 
+                        [limit]="10" 
+                        [selected]="item_selected_absence" 
+                        [selectionType]="'single'"
+                        (select)="onSelect_absence($event)">
+
+
+                            <ngx-datatable-column name="Type" prop="type">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span  *ngIf="!editing_absence[rowIndex]">{{ affichage_type(value)}}</span>
+                                    <span *ngIf="editing_absence[rowIndex]">
+                                        <mat-form-field appearance="legacy" style="min-width: 100px;">
+                                            <mat-select (selectionChange)="updateValue_absence_type($event, 'type', rowIndex)" [(value)]="row.type" style="min-width: 100px;max-width: 120px; background-color: white;" >
+                                                
+                                                <mat-option [value]="1">Absence</mat-option>
+                                                <mat-option [value]="2">Maladie</mat-option>
+                                                <mat-option [value]="3">Pérmission</mat-option>
+                                            </mat-select>
+
+                                        </mat-form-field>
+
+                                    </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            
+                            <ngx-datatable-column name="Motif" prop="motif">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_absence[rowIndex]">{{ value }}</span>
+                                    <input  *ngIf="editing_absence[rowIndex]" type="text" (change)="updateValue_absence($event, 'motif', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_absence[rowIndex]" >{{ formatDate(value) }}</span>
+                                    <span *ngIf="editing_absence[rowIndex]"> 
+                                        <input  [max]="datenow" [matDatepicker] = "picker" (dateInput)="updateValue_absence($event, 'date_debut', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                        <mat-datepicker-toggle  matSuffix [for] = "picker" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                        <mat-datepicker  #picker style="display: inline-block !important;"> </mat-datepicker>
+                                        
+                                    </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Duree" prop="duree">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_absence[rowIndex]">{{ value }}</span>
+                                    <input  *ngIf="editing_absence[rowIndex]" type="number" (keyup)="updateValue_absence_duree($event, 'duree', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                                <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_absence[rowIndex]" >{{ formatDate(value) }}</span>
+                                        <span *ngIf="editing_absence[rowIndex]"> 
+                                            <input  [max]="datenow" [matDatepicker] = "picker2" (dateInput)="updateValue_absence($event, 'date_fin', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                            <mat-datepicker-toggle  matSuffix [for] = "picker2" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                            <mat-datepicker  #picker2 style="display: inline-block !important;"> </mat-datepicker>
+                                            
+                                        </span>
+                                    </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Personnel" prop="personnel_absent.nom">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Personnel" prop="personnel_validation.nom">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Validation" prop="validation">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ affichage_validation(value) }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            
+                        </ngx-datatable>
+                    </div>
+                    
+                </div>
+                <!-- / PUT YOUR TAB CONTENT HERE -->
+            </div>
+        </div>
+    </div>
+    <ng-template #suppressionDialog_absence>
+      <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+      <mat-dialog-content>      
+        
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_absence()">Ok</button>
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+      </mat-dialog-actions>
+    </ng-template>
+    <ng-template #avertissementDialog_absence let-data>
+      <h2 matDialogTitle>{{data.titre}}</h2>
+      <mat-dialog-content>      
+        <span>{{data.corps}}</span><br>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+      </mat-dialog-actions>
+    </ng-template>
+
+</div>

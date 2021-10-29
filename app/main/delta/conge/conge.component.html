@@ -1,0 +1,160 @@
+<div class="page-layout simple fullwidth tabbed" fxLayout="column">
+
+    <!-- CONTENT -->
+
+    <div class="content p-24" >
+        <div class="mat-card mat-elevation-z4 p-24 " fxLayout="column" fxLayoutAlign="start" style="padding: 0!important;">
+            <div class="tab-content p-24">
+                <!-- PUT YOUR TAB CONTENT HERE -->
+                <div class="mat-card mat-elevation-z4  m-4">
+                    <mat-divider></mat-divider>
+                    <div  class="package-type h-44 primary-50" fxLayout="row" fxLayoutAlign="space-between center">
+                        <span class="p-12">
+                            <span class="border-right mr-2" >CONGE </span>
+                            
+                            <!-- <button mat-button (click)="modifier()">Basic</button> -->
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter_conge"
+                                (click)="ajouter_conge()" *ngIf="!new_item_conge && item_selected_conge.length==0" matTooltip="Ajouter">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Modifier_conge" (click)="modifier_conge()"
+                                *ngIf="item_selected_conge.length > 0 && !editing_conge[index_selected_conge] && item_selected_conge[0].validation==0" matTooltip="Modifier">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_conge.length > 0 && !editing_conge[index_selected_conge] && item_selected_conge[0].validation==0" (click)="supprimer_conge()" matTooltip="Supprimer" >
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_conge.length > 0 && !editing_conge[index_selected_conge] && item_selected_conge[0].validation==0" (click)="valider_conge(0)" matTooltip="Valider" style="color: rgb(49, 167, 49);">
+                                <mat-icon>done_all</mat-icon>
+                            </button>
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="item_selected_conge.length > 0 && !editing_conge[index_selected_conge] && item_selected_conge[0].validation==0" (click)="rejeter_conge(0)" matTooltip="Rejeter" style="color: orangered;">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Supprimer"
+                                *ngIf="editing_conge[index_selected_conge] && item_selected_conge[0].personnel_conge.id!=null &&
+                                 item_selected_conge[0].motif!=null && item_selected_conge[0].date_debut!=null 
+                                 && item_selected_conge[0].date_fin!=null"
+                                 (click)="verification_avant_save(0)">
+                                <mat-icon>save</mat-icon>
+                            </button>
+
+                            <button mat-button mat-icon-button color="fuse-navy" aria-label="Annuler" (click)="annuler_conge()"
+                                *ngIf="item_selected_conge.length > 0" matTooltip="Annuler">
+                                <mat-icon>cancel</mat-icon>
+                            </button>           
+                        </span>
+                        <span class="p-12"><input type="text" style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                            placeholder="Rechercher..." (keyup)="updateFilter_conge($event)" /></span>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div>
+                        <ngx-datatable class="material" 
+                        [rows]="rows_conge" 
+                        [loadingIndicator]="loadingIndicator_conge" 
+                        [columnMode]="'force'"
+                        [headerHeight]="48" 
+                        [footerHeight]="56" 
+                        [rowHeight]="'auto'" 
+                        [scrollbarH]="true" 
+                        [reorderable]="reorderable_conge"
+                        [selectionType]="'checkbox'" 
+                        [limit]="10" 
+                        [selected]="item_selected_conge" 
+                        [selectionType]="'single'"
+                        (select)="onSelect_conge($event)">
+                            
+                            <ngx-datatable-column name="Motif" prop="motif">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_conge[rowIndex]">{{ value }}</span>
+                                    <input  *ngIf="editing_conge[rowIndex]" type="text" (keyup)="updateValue_conge($event, 'motif', rowIndex)" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Date de debut" prop="date_debut" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_conge[rowIndex]" >{{ formatDate(value) }}</span>
+                                    <span *ngIf="editing_conge[rowIndex]"> 
+                                        <input  [max]="datenow" [matDatepicker] = "picker" (dateInput)="updateValue_conge_date_debut($event, 'date_debut', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                        <mat-datepicker-toggle  matSuffix [for] = "picker" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                        <mat-datepicker  #picker style="display: inline-block !important;"> </mat-datepicker>
+                                        
+                                    </span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                                <ngx-datatable-column name="Date de fin" prop="date_fin" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                        <span *ngIf="!editing_conge[rowIndex]" >{{ formatDate(value) }}</span>
+                                        <span *ngIf="editing_conge[rowIndex]"> 
+                                            <input  [max]="datenow" [matDatepicker] = "picker2" (dateInput)="updateValue_conge_date_fin($event, 'date_fin', rowIndex)" [value]="value" style="width: 120px !important;" [disabled]="!row.date_debut"/>
+                                            <mat-datepicker-toggle  matSuffix [for] = "picker2" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                            <mat-datepicker  #picker2 style="display: inline-block !important;"> </mat-datepicker>
+                                            
+                                        </span>
+                                    </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Date de retour" prop="date_retour" [cellClass]="'my-custom-cell-global'" [width]="280">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_conge[rowIndex]" >{{ formatDate(value) }}</span>
+                                    <span *ngIf="editing_conge[rowIndex]"> 
+                                        <input  [max]="datenow" [matDatepicker] = "picker3" (dateInput)="updateValue_conge_date_retour($event, 'date_retour', rowIndex)" [value]="value" style="width: 120px !important;"/>
+                                        <mat-datepicker-toggle  matSuffix [for] = "picker3" style="display: inline-block !important;"> </mat-datepicker-toggle> 
+                                        <mat-datepicker  #picker3 style="display: inline-block !important;"> </mat-datepicker>
+                                        
+                                    </span>
+                                </ng-template>
+                        </ngx-datatable-column>
+                            <ngx-datatable-column name="Reste congé" prop="reste_conge">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span *ngIf="!editing_conge[rowIndex]">{{ value }}</span>
+                                    <input  *ngIf="editing_conge[rowIndex]" type="number" [value]="value" />
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Personnel" prop="personnel_conge.nom">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Personnel" prop="personnel_validation.nom">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ value }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Validation" prop="validation">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <span>{{ affichage_validation(value) }}</span>
+                                </ng-template>
+                            </ngx-datatable-column>
+                            
+                        </ngx-datatable>
+                    </div>
+                    
+                </div>
+                <!-- / PUT YOUR TAB CONTENT HERE -->
+            </div>
+        </div>
+    </div>
+    <ng-template #suppressionDialog_conge>
+      <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+      <mat-dialog-content>      
+        
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="suppressionConfirmer_conge()">Ok</button>
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+      </mat-dialog-actions>
+    </ng-template>
+    <ng-template #avertissementDialog_conge let-data>
+      <h2 matDialogTitle>{{data.titre}}</h2>
+      <mat-dialog-content>      
+        <span>{{data.corps}}</span><br>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end">
+        <button mat-button matDialogClose color="primary" (click)="closeDialog()">Fermer</button>
+      </mat-dialog-actions>
+    </ng-template>
+
+</div>

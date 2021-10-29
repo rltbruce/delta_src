@@ -1,0 +1,258 @@
+<div id="chat" class="page-layout carded fullwidth inner-scroll">
+    <!-- CENTER -->
+    <div class="center">
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+            
+            <mat-sidenav-container>
+                <!-- LEFT SIDENAV -->
+                
+                <mat-sidenav position="start" opened="true" mode="side" matIsLockedOpen="gt-md" fxFlex fxLayout="column" fxLayoutAlign="space-evenly none">
+                    <div class="no-v-scroll">
+                        <div class="sidenav-header primary">
+                            <div class="mr-2 ">
+                                <span ><h3 mat-subheader>Contact</h3></span>         
+                            </div>
+                            <div>
+                                <mat-toolbar-row>
+                                    <div class="search-wrapper" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                
+                                        <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                            <mat-icon class="s-16 secondary-text">search</mat-icon>
+                                            <input type="text" placeholder="Rechercher..." (keyup)="updateFilter($event)" fxFlex class="primary">
+                                        </div>
+                                
+                                    </div>
+            
+                                </mat-toolbar-row>
+
+                            </div>
+
+                        </div>   
+                        <mat-divider></mat-divider>
+                        <!-- / SEARCH -->
+                        <div style="overflow-y: auto;">
+                            <mat-nav-list>
+                                <!--h3 mat-subheader>Contact</h3>
+                                <mat-divider></mat-divider-->
+                                <mat-list-item *ngFor="let perso of rows_utilisateur" 
+                                [ngClass]="{selected: selected_option.isSelected(perso)}"
+                                (click)="onSelect(perso)">
+                                    <mat-icon mat-list-icon>person</mat-icon>
+                                    <h4 mat-line>{{perso.personnel.nom}}</h4>
+                                    <p mat-line> {{perso.personnel.prenom}} </p>
+                                    <mat-divider></mat-divider>
+                                </mat-list-item>
+                            </mat-nav-list>
+
+                        </div>
+                    </div>         
+                    <!--div>
+                        <ngx-datatable class="material" [rows]="rows_utilisateur" [loadingIndicator]="loadingIndicator" [columnMode]="'force'"
+                            [headerHeight]="1" [footerHeight]="1" [rowHeight]="58" [scrollbarV]="true" [reorderable]="reorderable"
+                            [selectionType]="'checkbox'"  [selected]="item_selected" [selectionType]="'single'"
+                            [cellClass]="'my-custom-cell-global'" (select)="onSelect($event)" fxFlex> 
+
+                            <ngx-datatable-column name="">
+                                <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                    <div fxLayout="row" fxLayoutAlign="space-around center">
+                                        <div>
+                                            <mat-icon >person</mat-icon>
+                                        </div>
+                                        <div class="ml-16">{{ row.prenom }}</div>
+
+                                    </div>
+                                </ng-template>
+                            </ngx-datatable-column>  
+                            
+                        </ngx-datatable>
+                    </div-->                      
+                </mat-sidenav>
+                <!-- / LEFT SIDENAV -->
+                
+                <mat-sidenav class="sidenavright" position="end" opened="true" mode="side" matIsLockedOpen="gt-md" fxFlex fxLayout="column" fxLayoutAlign="space-evenly stretch">                    
+                    <div fxFlex  fxLayout="column" fxLayoutAlign="space-between stretch" *ngIf="selected_option.selected.length!=0">
+                        <div class="sidenav-header primary">                        
+                            <span><h3 mat-subheader>{{item_selected.personnel.nom}}</h3></span>
+                            <mat-divider></mat-divider>
+                        </div>
+                        <!-- CHAT CONTENT -->
+                        <div id="chat-content" fxFlex="1 1 auto"  fusePerfectScrollbar>
+    
+                            <!-- CHAT MESSAGES -->
+                            <div class="chat-messages">
+    
+                                <!-- MESSAGE -->
+                                <div *ngFor="let message of rows_messages; let i = index ;" class="message-row"
+                                [ngClass]="{
+                                    'receive': message.type_message === 'receive',
+                                    'send': message.type_message === 'send',
+                                    'first-of-group': isFirstMessageOfGroup(message, i),
+                                    'last-of-group': isLastMessageOfGroup(message, i)
+                                    }">
+                                    <div class="bubble">
+                                        <div class="message" style="max-width: calc(30em * 0.5);word-wrap: break-word;">{{message.message}}
+                                        <div *ngIf="message.repertoire"><br>
+                                            <span>Pièce jointe:</span><br>
+                                            {{message.repertoire}}
+                                        </div>
+                                    </div>
+                                        <div class="time secondary-text">{{message.date | date:'dd/MM/yyyy HH:mm'}}</div>
+                                        <div class="boutonparmessage secondary-text" *ngIf="message.type_message === 'send'">
+                                            <button mat-icon-button
+                                                    [matMenuTriggerFor]="userMenu"
+                                                    aria-label="more">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #userMenu="matMenu">
+                                                <button mat-menu-item (click)="openformulairemodification(message)">
+                                                    Modifier
+                                                </button>
+                                                <button *ngIf="message.pas_supprimer==0" mat-menu-item (click)="opendialogsuppression(message)">
+                                                    Supprimer
+                                                </button>
+                                                <button *ngIf="message.pas_supprimer==0" mat-menu-item (click)="message_pas_supprimer(message)">
+                                                    A ne pas supprimer
+                                                </button>
+                                                <button *ngIf="message.repertoire" mat-menu-item (click)="download_piece(message)">
+                                                    Télécharger pièce jointe
+                                                </button>
+                                            </mat-menu>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- / MESSAGE -->
+    
+                            </div>
+                            <!-- CHAT MESSAGES -->
+    
+                        </div>
+                        <!-- / CHAT CONTENT -->
+                        <!-- CHAT FOOTER -->
+                        <div class="chat-footer" fxFlex="0 0 auto" fxLayout="column">
+                            <!-- REPLY FORM -->
+                            <div class="reply-form" fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center">
+    
+                                <form #replyForm="ngForm"
+                                    fxFlex fxLayout="column" fxLayoutAlign="center stretch">
+                                    <div>
+                                        <input  *ngIf="show_input_file" type="file" (change)="updateValue_repertoire($event.target.files, 'repertoire', rowIndex)" [value]="" />
+                                    </div>
+                                    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                        <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter_detail"
+                                        (click)="affiche_masque_input_file()">                                                
+                                            <mat-icon>attach_file</mat-icon>
+                                        </button>
+                                        <mat-form-field class="message-text" fxFlex floatLabel="never" appearance="standard">
+                                            <textarea matInput #replyInput placeholder="Message"
+                                            [(ngModel)]="message_model.message" name="message" [rows]="1" [matTextareaAutosize]="true" style="word-wrap : break-word;"></textarea>
+                                        </mat-form-field>
+        
+                                        <button class="send-message-button" mat-icon-button type="submit" aria-label="Send message" (click)="ajout(0,message_model)">
+                                            <mat-icon class="secondary-text">send</mat-icon>
+                                        </button>
+
+                                    </div>
+    
+                                </form>
+    
+                            </div>
+                            <!-- / REPLY FORM -->
+    
+                        </div>
+                        <!-- / CHAT FOOTER-->
+
+                    </div>
+                    <div fxFlex  fxLayout="column" fxLayoutAlign="center center" *ngIf="selected_option.selected.length==0">
+                        
+                            <div
+                                 [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                                <mat-icon class="s-64 s-md-128 mat-accent">chat</mat-icon>
+                            </div>
+                        
+                            <div class="app-title mt-48 mb-8" [@animate]="{value:'*',params:{delay:'100ms',y:'25px'}}">
+                                Discussion par message
+                            </div>
+                        
+                            <div fxHide fxShow.gt-md class="app-message" [@animate]="{value:'*',params:{delay:'200ms',y:'50px'}}">
+                                Séléctionner contact pour commencer!
+                            </div>
+                        
+                            <button mat-raised-button fxHide.gt-md fuseMatSidenavToggler="chat-left-sidenav">
+                                Séléctionner contact pour commencer!
+                            </button>
+    
+                    </div>
+                </mat-sidenav>
+               
+                
+            </mat-sidenav-container>
+        </div>
+        <!-- CONTENT CARD -->
+    </div>
+    <!-- CENTER -->
+
+</div>
+<ng-template #modifDialog let-data>
+    <h1 matDialogTitle>Formulaire</h1>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+
+        <div class="divform" >
+            <form name="chatForm" [formGroup]="chatForm" novalidate fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                <div class="centerinput" style="min-width: 400px !important;">
+                    <button mat-button mat-icon-button color="fuse-navy" aria-label="Ajouter_detail"
+                        (click)="affiche_masque_input_dialog_file()" *ngIf="!data.repertoire">                                                
+                            <mat-icon>attach_file</mat-icon>
+                    </button>   
+                    <mat-form-field  fxFlex="100" class="pl-4">
+                        <mat-label>Message</mat-label>
+                        <!--input matInput formControlName="messages" [(ngModel)]="data.message" name="messages" required-->
+                        <textarea matInput formControlName="messages" #replyInput placeholder="Message"
+                                [(ngModel)]="data.message" name="messages" [rows]="1" [matTextareaAutosize]="true" style="word-wrap : break-word;">
+                        </textarea>
+                    </mat-form-field>
+
+                </div>
+                <div class="mb-8 mt-8" *ngIf="show_input_dialog_file || data.repertoire" fxLayout="column" fxLayoutAlign="space-around start">
+                    
+                    <span style="font-weight: bold;">Pièce jointe:</span>
+                    <span class="ml-16">{{data.repertoire}}</span>
+                    
+                        <input type="file" (change)="updateValue_repertoire($event.target.files, 'repertoire', rowIndex)" [value]="" />
+                   
+                   
+                </div>
+                <!--div class="terms" fxLayout="row" fxLayoutAlign="center center">
+                    <mat-checkbox name="terms" aria-label="I read and accept" required>
+                        <span>I read and accept</span>
+                    </mat-checkbox>
+                    <a href="#">terms and conditions</a>
+                </div!-->
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <button (click)="modifier(0,data)" mat-raised-button color="accent" class="submit-button ml-4" aria-label="CREATE AN FORM"
+                    [disabled]="chatForm.invalid">
+                    Sauvegarder
+                </button>
+                <button (click)="annulermodal()" mat-raised-button color="primary" aria-label="ANNULER AN FORM" class="ml-4">
+                    ANNULER
+                </button>
+            </div>
+            </form>
+        </div>
+    </mat-dialog-actions>
+  </ng-template>
+  
+  <ng-template #suppressionDialog let-data>
+    <h2 matDialogTitle>Etes-vous sûr de supprimer cet enregistrement ?</h2>
+    <mat-dialog-content>      
+      
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose color="primary" (click)="suppression(1,data)">Ok</button>
+      <button mat-button matDialogClose color="primary" (click)="FermerDialog()">Fermer</button>
+    </mat-dialog-actions>
+  </ng-template>

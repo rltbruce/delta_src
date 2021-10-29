@@ -1,0 +1,14 @@
+@import '@swimlane/ngx-datatable/themes/dark.css';
+#document
+{
+  .datatable-header {
+    //color: green !important;
+   // background-color: red !important;
+ }
+ .mouseurl:hover
+ {
+   cursor: pointer; 
+   text-decoration: underline;
+   //color: green !important;
+ }
+}

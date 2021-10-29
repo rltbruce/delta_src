@@ -895,7 +895,7 @@ annuler_debours()
       }    
   }
 
-
+ //Andrana mise a jour smartgit
   sauver_honoraire()
   {
     console.log("Sauver honoraire");

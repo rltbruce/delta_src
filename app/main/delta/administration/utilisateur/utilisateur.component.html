@@ -1,0 +1,280 @@
+<div class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- CONTENT HEADER -->
+        <div class="header accent p-24 h-60" fxLayout="row" fxLayoutAlign="start center">
+            <div fxLayout="column" fxLayoutAlign="center start">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="secondary-text s-18">home</mat-icon>
+                    <mat-icon class="secondary-text s-16">chevron_right</mat-icon>
+                    <span class="secondary-text">Utilisateurs</span>
+                </div>
+            </div>
+        </div>
+        <!-- / CONTENT HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT TOOLBAR -->
+            <div class="toolbar px-24 py-8">
+                <span>
+                    <input type="text"
+                        style="padding:8px;margin:15px auto;width:100%;color:#353A48; border: 1px solid #babdc5;"
+                        placeholder="Rechercher..." (keyup)="rechercher_utilisateurs($event)">
+                </span>
+                <span>
+                    <!--button mat-icon-button color="black" aria-label="Ajouter">
+                        <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                    <button mat-fab color="black" (click)="ModifFormUtilisateur()" class="ml-4"
+                        *ngIf="afficherboutonModif">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-fab color="black" (click)="supprimerUser(utilisateur,1)" class="ml-4"
+                        *ngIf="afficherboutonSupr">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-raised-button type="button" color="accent" (click)="ModifFormpsw()"
+                        aria-label="modifier mot de passe" *ngIf="afficherboutonModif" class="ml-4">
+                        Changer PSW
+                    </button>
+                    <button mat-fab color="black" (click)="ajoutUser(utilisateur,0)" class="ml-4"
+                        *ngIf="afficherboutonSave" [disabled]="ModifFormUtilisateur.invalid">
+                        <mat-icon>done</mat-icon>
+                    </button>
+                    <button mat-fab color="black" (click)="annulermodal()" class="ml-4" *ngIf="afficherboutonAnnule">
+                        <mat-icon>close</mat-icon>
+                    </button-->
+                    <button mat-raised-button type="button" color="accent" (click)="ModifFormUtilisateur()"
+                        *ngIf="afficherboutonModif" class="ml-4">
+                        Modifier
+                    </button>
+                    <button mat-raised-button type="button" color="warn" (click)="supprimerUser(utilisateur,1)"
+                        *ngIf="afficherboutonModif" class="ml-4">
+                        Supprimer
+                    </button>
+                    <button mat-raised-button type="button" color="primary" (click)="ModifFormpsw()"
+                        *ngIf="afficherboutonModif" class="ml-4">
+                        Modifier mot de passe
+                    </button>
+                </span>
+            </div>
+            <!-- / CONTENT TOOLBAR -->
+
+            <!-- CONTENT -->
+            <div class="content p-24" fusePerfectScrollbar>
+                <mat-tab-group *ngIf="afficherFormModif">
+                    <mat-tab label="Modification utilisateur">
+                        <div class="divform">
+                            <form name="UtilisateurformModif" [formGroup]="UtilisateurformModif" novalidate
+                                fxLayout="column" fxLayoutAlign="center center" fxLayout.xs="row">
+                                <div class="centerinput">
+
+                                    <input type="hidden" formControlName="id" [(ngModel)]="utilisateur.id">
+
+                                    <mat-form-field fxFlex="100" class="pl-4" appearance="outline">
+                                        <mat-label>Nom</mat-label>
+                                        <input matInput formControlName="nom" [(ngModel)]="utilisateur.nom">
+                                        <mat-icon matSuffix class="secondary-text">
+                                            account_circle
+                                        </mat-icon>
+                                        <mat-error>
+                                            Nom obligatoire
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="100" class="pl-4" appearance="outline">
+                                        <mat-label>Prenom</mat-label>
+                                        <input matInput formControlName="prenom" [(ngModel)]="utilisateur.prenom">
+                                        <mat-icon matSuffix class="secondary-text">
+                                            account_circle
+                                        </mat-icon>
+                                        <mat-error>
+                                            Prenom obligatoire
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex="100" class="pl-4" appearance="outline">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput formControlName="email" [(ngModel)]="utilisateur.email">
+                                        <mat-icon matSuffix class="secondary-text">
+                                            account_circle
+                                        </mat-icon>
+                                        <mat-error>
+                                            Email obligatoire
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="centerinput">
+                                    <mat-form-field fxFlex="30" class="pl-4" appearance="outline" fxFlex
+                                        style="width:80px;">
+                                        <mat-label>Etat</mat-label>
+                                        <!--input matInput formControlName="sigle" [(ngModel)]="utilisateur.sigle"-->
+                                        <mat-select formControlName="enabled" [(ngModel)]="utilisateur.enabled">
+                                            <mat-option [value]="0">Inactif</mat-option>
+                                            <mat-option [value]="1">Actif</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" class="pl-4" appearance="outline" fxFlex
+                                        style="width:220px;">
+                                        <mat-label>Personnel</mat-label>
+                                        <mat-select formControlName="personnel" [(ngModel)]="utilisateur.personnel">
+                                            <mat-option *ngFor="let pers of allPersonnel" [value]="pers.id"
+                                                [attr.selected]="utilisateur.personnel == pers.id ? true : null">
+                                                {{pers.nom}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            Personnel obligatoire
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="centerinput">
+                                    <mat-checkbox name="chk" style="margin-right:10px;" formControlName="user"
+                                        [(ngModel)]="utilisateur.user" [checked]="user"
+                                        (change)="OnChecked($event,'user')" value="User" [disabled]=true>User
+                                    </mat-checkbox>
+                                    <mat-checkbox name="chk" style="margin-right:10px;" formControlName="auditeur"
+                                        [(ngModel)]="utilisateur.auditeur" (change)="CheckedAuditeur($event,'auditeur')"
+                                        value="Auditeur">Auditeur
+                                    </mat-checkbox>
+                                    <mat-checkbox name="chk" style="margin-right:10px;" formControlName="chef_mission"
+                                        [(ngModel)]="utilisateur.chef_mission"
+                                        (change)="CheckedChefMission($event,'chef_mission')" value="chef_mission">Chef
+                                        mission
+                                    </mat-checkbox>
+                                    <mat-checkbox name="chk" style="margin-right:10px;"
+                                        formControlName="chef_hierarchique" [(ngModel)]="utilisateur.chef_hierarchique"
+                                        (change)="CheckedChefHierarchique($event,'chef_hierarchique')"
+                                        value="chef_hierarchique">Chef hierarchique
+                                    </mat-checkbox>
+
+                                </div>
+                                <div>&nbsp;</div>
+                                <div fxLayout="row" fxLayoutAlign="start start">
+                                    <button (click)="ajoutUser(utilisateur,0)" mat-raised-button color="accent"
+                                        class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                        [disabled]="UtilisateurformModif.invalid">
+                                        Enregistrer
+                                    </button>
+                                    <button (click)="annulermodal()" mat-raised-button color="accent"
+                                        aria-label="ANNULER AN FORM" class="ml-4">
+                                        ANNULER
+                                    </button><br><br>
+                                </div>
+                            </form>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+                <mat-tab-group *ngIf="afficherFormpassword">
+                    <mat-tab label="Modification mot de passe">
+                        <div class="divform">
+                            <form name="PswformModif" [formGroup]="PswformModif" novalidate fxLayout="column"
+                                fxLayoutAlign="center center" fxLayout.xs="row">
+                                <div class="centerinput">
+
+                                    <mat-form-field fxFlex="100" class="pl-4" appearance="outline">
+                                        <mat-label>Nouveau mot de passe</mat-label>
+                                        <input matInput type="password" formControlName="psw" [(ngModel)]="data.psw">
+                                        <mat-icon matSuffix class="secondary-text">
+                                            vpn_key
+                                        </mat-icon>
+                                        <mat-error>
+                                            Mot de passe obligatoire
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="100" class="pl-4" appearance="outline">
+                                        <mat-label>Confirmation mot de passe</mat-label>
+                                        <input matInput type="password" formControlName="psw_confirm"
+                                            [(ngModel)]="data.psw_confirm">
+                                        <mat-icon matSuffix class="secondary-text">
+                                            vpn_key
+                                        </mat-icon>
+                                        <mat-error *ngIf="PswformModif.get('psw_confirm').hasError('required')">
+                                            confirmation mot de passe obligatoire
+                                        </mat-error>
+                                        <mat-error *ngIf="!PswformModif.get('psw_confirm').hasError('required') &&
+                                                    PswformModif.get('psw_confirm').hasError('passwordsNotMatching')">
+                                            les mots de passe doivent correspondre
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="start start">
+                                    <button (click)="modificationPassword(data,0)" mat-raised-button color="accent"
+                                        class="submit-button ml-4" aria-label="CREATE AN FORM"
+                                        [disabled]="PswformModif.invalid">
+                                        Enregistrer
+                                    </button>
+                                    <button (click)="annulermodal()" mat-raised-button color="accent"
+                                        aria-label="ANNULER AN FORM" class="ml-4">
+                                        ANNULER
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+                <div>&nbsp;</div>
+                <div>
+                    <ngx-datatable #recherche_user class=" material" [loadingIndicator]="loadingIndicator"
+                        [columnMode]="'force'" [headerHeight]="48" [footerHeight]="56" [rowHeight]="'auto'"
+                        [scrollbarH]="true" [rows]="rows_user" [columns]="columnsUtilisateurs"
+                        [reorderable]="reorderable" [selected]="selected" [selectionType]="'single'"
+                        (select)='onSelectUtilisateur($event)' [limit]="10">
+
+                        <ngx-datatable-column name="Nom">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.anarana}}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column name="Prenom">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.prenom}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Email">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.email}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Roles">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.roles}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Etat">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{affichage_etat(row.enabled)}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Nom du Personnel">
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.personnel.nom}}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+
+                    </ngx-datatable>
+
+
+                </div>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

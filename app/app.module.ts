@@ -1,3 +1,4 @@
+import { AdministrationModule } from './main/delta/administration/administration.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -21,7 +22,7 @@ import { AuthModule } from 'app/main/auth/auth.module';
 import { DeboursModule } from 'app/main/delta/ddb/debours/debours.module';
 import { SectionModule } from 'app/main/delta/ddb/section/section.module';
 import { GradeModule } from 'app/main/delta/ddb/grade/grade.module';
-import { ProduitModule} from 'app/main/delta/ddb/produit/produit.module';
+import { ProduitModule } from 'app/main/delta/ddb/produit/produit.module';
 import { ClientModule } from 'app/main/delta/ddb/client/client.module';
 import { TacheModule } from 'app/main/delta/ddb/tache/tache.module';
 import { PersonnelModule } from 'app/main/delta/ddb/personnel/personnel.module';
@@ -42,12 +43,12 @@ import { ClientComponent } from './main/delta/ddb/client/client.component';
 import { TacheComponent } from './main/delta/ddb/tache/tache.component';
 import { PersonnelComponent } from './main/delta/ddb/personnel/personnel.component';
 import { MissionComponent } from './main/delta/ddb/mission/mission.component';
-import { TimeSheetModule} from './main/delta/time-sheet/time-sheet.module';
+import { TimeSheetModule } from './main/delta/time-sheet/time-sheet.module';
 
 
 const appRoutes: Routes = [
     {
-        path      : '**',
+        path: '**',
         redirectTo: 'accueil'
     }
 
@@ -57,10 +58,10 @@ const appRoutes: Routes = [
     declarations: [
         AppComponent,
         AlertComponent
-        
-       
+
+
     ],
-    imports     : [
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         HttpClientModule,
@@ -96,18 +97,18 @@ const appRoutes: Routes = [
         AuthModule,
         MatDialogModule,
         AccueilModule,
-        TimeSheetModule
+        TimeSheetModule,
+        AdministrationModule,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
-       
+
     ],
-    bootstrap   : [
+    bootstrap: [
         AppComponent
     ]
 })
-export class AppModule
-{
+export class AppModule {
 }

@@ -34,7 +34,7 @@
                             </mat-form-field>
                             <mat-form-field  fxFlex="100" class="pl-4" appearance="outline"> 
                                 <mat-label > Date de fin </mat-label > 
-                                <input  matInput [matDatepicker] = "picker1" [(ngModel)]="filtre.date_fin" formControlName="date_fin" required [disabled]="!filtre.date_debut"> 
+                                <input  matInput [matDatepicker] = "picker1" [(ngModel)]="filtre.date_fin" formControlName="date_fin" [min]="filtre.date_debut" required [disabled]="!filtre.date_debut"> 
                                 <mat-datepicker-toggle  matSuffix [for] = "picker1"> </mat-datepicker-toggle> 
                                 <mat-datepicker #picker1> </mat-datepicker> 
                                 <mat-error>
@@ -255,7 +255,7 @@
                         <mat-tab label="RESUME DE LA SEMAINE">
                             <div class="tab-content p-24">
                                 <!-- PUT YOUR TAB CONTENT HERE -->
-                                <div>
+                                <div class="ngx_fils">
                                     <ngx-datatable class="material striped" 
                                             [rows]="rows_timesheet_resume" 
                                             [loadingIndicator]="loadingIndicator_resume" 
@@ -271,8 +271,8 @@
                                     <ngx-datatable-column name="LUNDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.LUNDI" style="padding: 0!important;">
-                                                <div *ngIf="row.LUNDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.LUNDI" cel-border>
+                                                <div *ngIf="row.LUNDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.LUNDI" cel-border>
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -296,7 +296,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table>
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.LUNDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable>
 
                                                 </div>
                                                 <div *ngIf="row.LUNDI[0].type=='conge'">
@@ -315,8 +352,8 @@
                                     <ngx-datatable-column name="MARDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.MARDI" style="padding: 0!important;">
-                                                <div *ngIf="row.MARDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.MARDI">
+                                                <div *ngIf="row.MARDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.MARDI">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -340,7 +377,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table>
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.MARDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable>
 
                                                 </div>
                                                 <div *ngIf="row.MARDI[0].type=='conge'">
@@ -359,8 +433,8 @@
                                     <ngx-datatable-column name="MERCREDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.MERCREDI">
-                                                <div *ngIf="row.MERCREDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.MERCREDI">
+                                                <div *ngIf="row.MERCREDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.MERCREDI">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -384,7 +458,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table>
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.MERCREDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable>
 
                                                 </div>
                                                 <div *ngIf="row.MERCREDI[0].type=='conge'">
@@ -403,8 +514,8 @@
                                     <ngx-datatable-column name="JEUDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.JEUDI">
-                                                <div *ngIf="row.JEUDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.JEUDI">
+                                                <div *ngIf="row.JEUDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.JEUDI">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -428,7 +539,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table>
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.JEUDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable>
 
                                                 </div>
                                                 <div *ngIf="row.JEUDI[0].type=='conge'">
@@ -447,8 +595,8 @@
                                     <ngx-datatable-column name="VENDREDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.VENDREDI">
-                                                <div *ngIf="row.VENDREDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.VENDREDI">
+                                                <div *ngIf="row.VENDREDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.VENDREDI">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -472,7 +620,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table> 
+                                                    </mat-table--> 
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.VENDREDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable>
 
                                                 </div>
                                                 <div *ngIf="row.VENDREDI[0].type=='conge'">
@@ -491,8 +676,8 @@
                                     <ngx-datatable-column name="SAMEDI" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.SAMEDI">
-                                                <div *ngIf="row.SAMEDI[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.SAMEDI">
+                                                <div *ngIf="row.SAMEDI[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.SAMEDI">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -516,7 +701,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table> 
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.SAMEDI">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable> 
 
                                                 </div>
                                                 <div *ngIf="row.SAMEDI[0].type=='conge'">
@@ -535,8 +757,8 @@
                                     <ngx-datatable-column name="DIMANCHE" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
                                             <div *ngIf="row.DIMANCHE">
-                                                <div *ngIf="row.DIMANCHE[0].type=='timesheet'">
-                                                    <mat-table [dataSource]="row.DIMANCHE">
+                                                <div *ngIf="row.DIMANCHE[0].type=='timesheet'" class="ngxfilsfils">
+                                                    <!--mat-table [dataSource]="row.DIMANCHE">
                                                         <ng-container  matColumnDef="client">
                                                             <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
                                                             <mat-cell *matCellDef="let element" [ngClass]="'smallCell'">{{element.client.nom_client}}</mat-cell>
@@ -560,7 +782,44 @@
                                                         <mat-header-row *matHeaderRowDef="tableColumns_timesheet"></mat-header-row>
                                                         <mat-row *matRowDef="let row; columns: tableColumns_timesheet; let entry"
                                                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
-                                                    </mat-table> 
+                                                    </mat-table-->
+                                                    <ngx-datatable class="material striped"  
+                                                            [loadingIndicator]="loadingIndicator" 
+                                                            [columnMode]="'force'"
+                                                            [headerHeight]="48" 
+                                                            [footerHeight]="56" 
+                                                            [rowHeight]="'auto'"  
+                                                            [scrollbarH]="true"
+                                                            [reorderable]="reorderable"
+                                                            [limit]="10"  
+                                                            [rows]="row.DIMANCHE">
+                                                            
+                                                                <ngx-datatable-column name="Client" prop="client.nom_client" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Mission" prop="mission.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Section" prop="section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Sous section" prop="sous_section.libelle" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }}</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                                <ngx-datatable-column name="Durée" prop="duree" [cellClass]="'my-custom-cell-global'">
+                                                                    <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                                                                        <span>{{ value }} heures</span>                                            
+                                                                    </ng-template>
+                                                                </ngx-datatable-column>
+                                                        </ngx-datatable> 
 
                                                 </div>
                                                 <div *ngIf="row.DIMANCHE[0].type=='conge'">
@@ -598,8 +857,8 @@
                                     
                                     <ngx-datatable-column [name]="col.key" *ngFor="let col of rows_timesheet_etat | keyvalue" [flexGrow]="1" [minWidth]="500">
                                         <ng-template ngx-datatable-cell-template>
-                                            <div fxLayout="column" fxLayoutAlign="space-between center">
-                                                <span style="padding: 5px;">{{ affichage_type_situation(col.value.type) }}</span>
+                                            <div fxLayout="column" fxLayoutAlign="space-between center" class="mat-card mat-elevation-z4" style="background-color: slategray;">
+                                                <span style="padding: 5px;color: snow;">{{ affichage_type_situation(col.value.type) }}</span>
                                             </div>
                                             <div *ngIf="col.value.type=='timesheet'" class="ngxfilsfils">
                                                 <!--mat-table [dataSource]="col.value.timesheet" class="mat-elevation-z8">

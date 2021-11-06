@@ -12,14 +12,14 @@
     display: inherit;
   }
   .ngx_fils
-  {
+  { margin-top: 15px;
     .ngx-datatable.material .datatable-body .datatable-row-wrapper .datatable-body-cell
     {
       display: inline-flex !important;
-    align-items: stretch !important;
-    flex-direction: column !important;
-    align-content: space-between !important;
-    justify-content: space-evenly !important;
+      align-items: stretch !important;
+      flex-direction: column !important;
+      align-content: space-between !important;
+      justify-content: flex-start !important;
     }
   }
   .my-custom-cell-global
@@ -67,6 +67,7 @@
     }
     .mat-form-field-outline-gap
     {
+      border-top: 2px solid rgb(0,191,255) !important;
       border-bottom: 2px solid rgb(0,191,255) !important;
     }
     .mat-form-field-outline-end {
@@ -74,6 +75,7 @@
       border-right: 2px solid rgb(0,191,255) !important;
       border-bottom: 2px solid rgb(0,191,255) !important;
     }
+    
   }
   /*.mat-form-field-flex:hover .mat-form-field-outline-gap {
   border-top: 2px solid white !important;
@@ -98,6 +100,7 @@
     }
     .mat-form-field-outline-gap
     {
+      border-top: 2px solid white !important;
       border-bottom: 2px solid white !important;
     }
     .mat-form-field-outline-end {
@@ -120,7 +123,7 @@
     //font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     //font-family:initial;
-    font-weight:bolder;
+    font-weight:normal !important;
   }
     /*.titre_body
     {

@@ -256,9 +256,9 @@
                                 {{affichage_etat(row.enabled)}}
                             </ng-template>
                         </ngx-datatable-column>
-                        <ngx-datatable-column name="Nom du Personnel">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                {{row.personnel.nom}}
+                        <ngx-datatable-column name="Nom du Personnel" prop="personnel.nom">
+                            <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                                {{value}}
                             </ng-template>
                         </ngx-datatable-column>
 

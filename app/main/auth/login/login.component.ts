@@ -4,18 +4,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
 import { IndexApiService } from '../../../_services/index-api.service';
-import { AuthenticationService  } from '../../../_services/authentification.service';
-import { AlertService  } from '../../../_services/alert.service';
-import { MatDialog} from '@angular/material/dialog';
+import { AuthenticationService } from '../../../_services/authentification.service';
+import { AlertService } from '../../../_services/alert.service';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
-    selector     : 'login',
-    templateUrl  : './login.component.html',
-    styleUrls    : ['./login.component.scss'],
+    selector: 'login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations
 })
-export class LoginComponent implements OnInit
-{
+export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     users = [];
     returnUrl: string; loading = false;
@@ -28,24 +27,23 @@ export class LoginComponent implements OnInit
     constructor(
         private _fuseConfigService: FuseConfigService,
         private _formBuilder: FormBuilder,
-        private index_api:IndexApiService,
+        private index_api: IndexApiService,
         private authentificationservice: AuthenticationService,
         private alertService: AlertService,
         private route: ActivatedRoute,
         private router: Router,
         public dialog: MatDialog
-    )
-    {
+    ) {
         // Configure the layout
         this._fuseConfigService.config = {
             layout: {
-                navbar   : {
+                navbar: {
                     hidden: true
                 },
-                toolbar  : {
+                toolbar: {
                     hidden: true
                 },
-                footer   : {
+                footer: {
                     hidden: true
                 },
                 sidepanel: {
@@ -66,12 +64,21 @@ export class LoginComponent implements OnInit
     openDialog() {
         const dialogRef = this.dialog.open(DialogContentExampleDialog);
 
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog result: ${result}`);
+        });
+    }
+    openDialogenabled() {
+        const dialogRef = this.dialog.open(DialogContentEnabledDialog);
+
+
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
         });
     }
     authentification() {
-       
+
         this.loading = true;
         /* this.index_api.getAll('utilisateurs')
             .subscribe(res => {
@@ -81,23 +88,29 @@ export class LoginComponent implements OnInit
             }); */
 
         this.authentificationservice.get_user(this.f.email.value, this.f.password.value).subscribe(res => {
-          
+
             console.log(res);
-            
-            if (res.status === true) 
-            {
+
+            if (res.status === true && parseInt(res.response.enabled) == 1) {
                 this.router.navigate([this.returnUrl]);
-                
+
             }
-            else
-            {
-                this.openDialog();
+            else {
+                if (res.status === true && parseInt(res.response.enabled) == 0) {
+
+                    this.openDialogenabled();
+                    console.log("enabled");
+                } else {
+                    console.log("mot de passe");
+                    this.openDialog();
+                }
+
             }
 
         },
             error => {
                 this.alertService.error(error);
-                
+
             });
     }
 
@@ -108,11 +121,10 @@ export class LoginComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.loginForm = this._formBuilder.group({
-            email   : ['', [Validators.required, Validators.email]],
+            email: ['', [Validators.required, Validators.email]],
             password: ['', Validators.required]
         });
     }
@@ -122,3 +134,8 @@ export class LoginComponent implements OnInit
     templateUrl: 'dialog_view.html',
 })
 export class DialogContentExampleDialog { }
+@Component({
+    selector: 'dialog_enabled',
+    templateUrl: 'dialog_enabled.html',
+})
+export class DialogContentEnabledDialog { }

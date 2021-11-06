@@ -120,7 +120,7 @@ export class UtilisateurComponent implements OnInit {
         this.PswformModif.get('psw_confirm').updateValueAndValidity();
       });
 
-    this.index_api.getAll('Utilisateurs').subscribe((response) =>// Utilisateurs = nom_controller php
+    this.index_api.getgeneralise("Utilisateurs", "?type_get=findAll").subscribe((response) =>// Utilisateurs = nom_controller php
     {
       //console.log(response);
       this.rows_user = response['response'];
@@ -178,6 +178,10 @@ export class UtilisateurComponent implements OnInit {
     if (this.selected[0].roles.indexOf("chfmiss") != -1) {
       chfmiss = true;
     }
+    let idpers = 0;
+    if (this.selected[0].personnel) {
+      idpers = this.selected[0].personnel.id;
+    }
 
     this.utilisateur = {
       id: this.selected[0].id,
@@ -192,7 +196,7 @@ export class UtilisateurComponent implements OnInit {
       chef_mission: chfmiss,
       chef_hierarchique: chfhier,
       //sigle: this.selected[0].sigle,
-      personnel: this.selected[0].personnel.id
+      personnel: idpers
     }
     //this.dialog.open(this.modifDialog, { disableClose: true, data: this.utilisateur })
   }
@@ -355,6 +359,7 @@ export class UtilisateurComponent implements OnInit {
           this.selected[0].enabled = donne.enabled;
           this.selected[0].roles = donne.roles;
           this.selected[0].sigle = donne.sigle;
+          this.rows_user = [...this.rows_user];
         }
         else {
           this.rows_user = this.rows_user.filter((obj) => {

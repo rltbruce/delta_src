@@ -15,6 +15,18 @@ export const navigation: FuseNavigation[] = [
         type: 'item',
         icon: 'home',
         url: '/accueil'
+
+
+
+    },
+    {
+        id: 'chat',
+        title: 'Chat',
+        //translate: 'NAV.SAMPLE.TITLE',
+        type: 'item',
+        icon: 'home',
+        url: '/chat'
+
     },
     {
         id: 'Administration',
@@ -33,6 +45,8 @@ export const navigation: FuseNavigation[] = [
                 url: '/Utilisateurs'
 
             }
+
+
         ]
 
     },
@@ -54,6 +68,12 @@ export const navigation: FuseNavigation[] = [
                 title: 'Debours',
                 type: 'item',
                 url: '/debours'
+            },
+            {
+                id: 'reg',
+                title: 'Region',
+                type: 'item',
+                url: '/region'
             },
             {
                 id: 'prd',
@@ -98,6 +118,8 @@ export const navigation: FuseNavigation[] = [
         ]
     },
     {
+
+
         id: 'debours',
         title: 'Debours et Time Sheet',
         //translate: 'NAV.SAMPLE.TITLE',
@@ -121,7 +143,7 @@ export const navigation: FuseNavigation[] = [
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: 'item',
                 //icon     : 'home',
-                url: '/apps/dashboards/project'
+                url: '/demandedeb'
 
             },
             {
@@ -158,22 +180,8 @@ export const navigation: FuseNavigation[] = [
 
             },
             {
-<<<<<<< HEAD
                 id: 'feuille',
                 title: 'Time Sheet',
-=======
-                id       : 'chat',
-                title    : 'Chat',
-                //translate: 'NAV.SAMPLE.TITLE',
-                type     : 'item',
-                icon     : 'home',
-                url      : '/chat'           
-
-            },
-             {
-                id       : 'Administration',
-                title    : 'Administration',
->>>>>>> origin/main
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: 'item',
                 //icon     : 'home',
@@ -184,88 +192,20 @@ export const navigation: FuseNavigation[] = [
     },
     {
         id: 'documents',
-        title: 'Documents',
+        title: 'Documents inside',
         //translate: 'NAV.SAMPLE.TITLE',
         type: 'collapsable',
         icon: 'home',
 
         children: [
             {
-<<<<<<< HEAD
                 id: 'dc1',
-                title: 'Suivi',
+                title: 'Suivi doc',
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: 'item',
                 // icon     : 'home',
-                url: '/apps/dashboards/project'
+                url: '/document'
 
-=======
-                id       : 'db',
-                title    : 'Donnees de base',
-               // translate: 'NAV.DASHBOARDS',
-                type     : 'collapsable',
-                icon     : 'dashboard',
-                children : [
-                    {
-                        id   : 'grd',
-                        title: 'Grade',
-                        type : 'item',
-                        url  : '/grade'
-                    },
-                    {
-                        id   : 'deb',
-                        title: 'Debours',
-                        type : 'item',
-                        url  : '/debours'
-                    },
-                    {
-                        id   : 'reg',
-                        title: 'Region',
-                        type : 'item',
-                        url  : '/region'
-                    },
-                    {
-                        id   : 'prd',
-                        title: 'Produit',
-                        type : 'item',
-                        url  : '/produit'
-                    }
-                    ,
-                    {
-                        id   : 'sec',
-                        title: 'Section',
-                        type : 'item',
-                        url  : '/section'
-                    },
-                    {
-                        id   : 'tch',
-                        title: 'Audit File',
-                        type : 'item',
-                        url  : '/tache'
-                    }
-                    ,
-                {
-                    id       : 'clt',
-                    title    : 'Client',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                   // icon     : 'home',
-                   url  : '/client'
-         
-                },
-                
-                {
-                    id       : 'pers',
-                    title    : 'Personnels',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                      url  : '/personnel'
-         
-               }
-         
-                ]
->>>>>>> origin/main
             },
             {
                 id: 'dc1',
@@ -301,10 +241,9 @@ export const navigation: FuseNavigation[] = [
                 id: 'cng',
                 title: 'Congé',
                 //translate: 'NAV.SAMPLE.TITLE',
-<<<<<<< HEAD
                 type: 'item',
                 //icon     : 'home',
-                url: '/apps/dashboards/project'
+                url: '/conge'
 
             },
             {
@@ -313,7 +252,7 @@ export const navigation: FuseNavigation[] = [
                 //translate: 'NAV.SAMPLE.TITLE',
                 type: 'item',
                 //icon     : 'home',
-                url: '/apps/dashboards/project'
+                url: '/absence'
 
             },
             {
@@ -327,177 +266,26 @@ export const navigation: FuseNavigation[] = [
             }
 
         ]
-    }
+    },
+    {
+        id: 'rpt',
+        title: 'Reporting',
+        //translate: 'NAV.SAMPLE.TITLE',
+        type: 'collapsable',
+        icon: 'home',
 
+        children: [
+            {
+                id: 'tmsheet',
+                title: 'Time sheet',
+                //translate: 'NAV.SAMPLE.TITLE',
+                type: 'item',
+                //icon     : 'home',
+                url: '/reportingTimeSheet'
+
+            }]
+    }
     /*]
 }*/
 ];
 
-=======
-                type     : 'collapsable',
-                icon     : 'home',
-
-                children : [
-                    {
-                        id       : 'mission',
-                        title    : 'Saisie Contrat et mission',
-                        //translate: 'NAV.SAMPLE.TITLE',
-                        type     : 'item',
-                        //icon     : 'home',
-                         url  : '/mission'
-             
-                   },
-
-                {
-                    id       : 'debours1',
-                    title    : 'Demande de debours',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                     url  : '/demandedeb'
-         
-               },
-               {
-                    id       : 'aut',
-                    title    : 'Autorisation de debours',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                   url  : '/apps/dashboards/project'
-         
-               },
-             
-              
-               
-                {
-                    id       : 'visa',
-                    title    : 'Visa de debours',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                   url  : '/apps/dashboards/project'
-         
-               },
-             
-             
-               
-                {
-                    id       : 'paie',
-                    title    : 'Paiement de debours',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                   // icon     : 'home',
-                   url  : '/apps/dashboards/project'
-         
-               },
-               {
-                    id       : 'feuille',
-                    title    : 'Time Sheet',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                    url  : '/timeSheet'
-         
-               }
-               ]
-            },
-             {
-                id       : 'documents',
-                title    : 'Documents inside',
-                //translate: 'NAV.SAMPLE.TITLE',
-                type     : 'collapsable',
-                icon     : 'home',
-
-                children : [
-                {
-                    id       : 'dc1',
-                    title    : 'Suivi doc',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                   // icon     : 'home',
-                    url  : '/document'
-         
-               },
-               {
-                    id       : 'dc1',
-                    title    : 'Recherche et Upload',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                   url  : '/apps/dashboards/project'
-         
-               }
-             
-              ]
-
-             },
-             {
-                id       : 'grh',
-                title    : 'Ressources humaines',
-                //translate: 'NAV.SAMPLE.TITLE',
-                type     : 'collapsable',
-                icon     : 'home',
-
-                children : [
-                {
-                    id       : 'carr',
-                    title    : 'Carriere',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                    url  : '/apps/dashboards/project'
-         
-               },
-                {
-                    id       : 'cng',
-                    title    : 'Congé',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                    url  : '/conge'
-         
-               },
-               {
-                    id       : 'abs',
-                    title    : 'Absence',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                    url  : '/absence'
-         
-               },
-               {
-                    id       : 'prm',
-                    title    : 'Permission',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                   url  : '/apps/dashboards/project'
-         
-               }
-             
-              ]
-             },
-             {
-                id       : 'rpt',
-                title    : 'Reporting',
-                //translate: 'NAV.SAMPLE.TITLE',
-                type     : 'collapsable',
-                icon     : 'home',
-
-                children : [
-                {
-                    id       : 'tmsheet',
-                    title    : 'Time sheet',
-                    //translate: 'NAV.SAMPLE.TITLE',
-                    type     : 'item',
-                    //icon     : 'home',
-                    url  : '/reportingTimeSheet'
-         
-               }]
-             }
-            /*]
-        }*/
-        ];
-           
->>>>>>> origin/main

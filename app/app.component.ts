@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Platform } from '@angular/cdk/platform';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { interval,Subject,Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { FuseConfigService } from '@fuse/services/config.service';
@@ -18,6 +18,7 @@ import { locale as navigationTurkish } from 'app/navigation/i18n/tr';
 import { AuthenticationService } from '../app/_services/authentification.service';
 import { User } from '../app/_models/user';
 import { Router } from '@angular/router';
+import { IndexApiService } from '../app/_services/index-api.service';
 
 @Component({
     selector   : 'app',
@@ -29,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy
     fuseConfig: any;
     navigation: any;
     currentUser: User;
+    badge_chat: Subscription;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -55,7 +57,8 @@ export class AppComponent implements OnInit, OnDestroy
         private _translateService: TranslateService,
         private _platform: Platform,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private index_api: IndexApiService
     )
     {
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -121,6 +124,56 @@ export class AppComponent implements OnInit, OnDestroy
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+        this.currentUser = this.authenticationService.currentUserValue;
+        if (this.currentUser)
+        {
+            this.index_api.getgeneralise("chat","?menu=getnumbermessagechatpasvu&id_user="+this.currentUser.id).subscribe(resp =>
+                {
+                  let  nbr_message= resp.response;
+                  if (parseInt(nbr_message[0].nbr)!=0)
+                  {
+                    this._fuseNavigationService.updateNavigationItem('chat', {
+                        badge: {title:parseInt(nbr_message[0].nbr),
+                          bg       : '#F44336',
+                          fg       : '#FFFFFF'}
+                    });
+                      
+                  }
+                  else
+                  {
+                    this._fuseNavigationService.updateNavigationItem('chat', {badge:false
+                    });
+                  }
+                  
+                  //console.log(nbr_message);   
+                });
+        }        
+              this.badge_chat = interval(10000).subscribe((func => {
+                if (this.currentUser)
+                {
+                    this.index_api.getgeneralise("chat","?menu=getnumbermessagechatpasvu&id_user="+this.currentUser.id).subscribe(resp =>
+                    {
+                    let  nbr_message= resp.response;
+                    if (parseInt(nbr_message[0].nbr)!=0)
+                    {
+                        this._fuseNavigationService.updateNavigationItem('chat', {
+                            badge: {title:parseInt(nbr_message[0].nbr),
+                            bg       : '#F44336',
+                            fg       : '#FFFFFF'}
+                        });
+                        
+                    }
+                    else
+                    {
+                      this._fuseNavigationService.updateNavigationItem('chat', {badge:false
+                      });
+                    }
+                    
+                    //console.log(nbr_message);   
+                    });
+                }
+              }))
+        
     }
 
     // -----------------------------------------------------------------------------------------------------

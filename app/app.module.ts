@@ -25,8 +25,8 @@ import { GradeModule } from 'app/main/delta/ddb/grade/grade.module';
 
 import { ProduitModule } from 'app/main/delta/ddb/produit/produit.module';
 
-import { ProduitModule} from 'app/main/delta/ddb/produit/produit.module';
-import { RegionModule} from 'app/main/delta/ddb/region/region.module';
+//import { ProduitModule} from 'app/main/delta/ddb/produit/produit.module';
+import { RegionModule } from 'app/main/delta/ddb/region/region.module';
 
 import { ClientModule } from 'app/main/delta/ddb/client/client.module';
 import { TacheModule } from 'app/main/delta/ddb/tache/tache.module';
@@ -50,17 +50,17 @@ import { TacheComponent } from './main/delta/ddb/tache/tache.component';
 import { PersonnelComponent } from './main/delta/ddb/personnel/personnel.component';
 import { MissionComponent } from './main/delta/ddb/mission/mission.component';
 
-import { TimeSheetModule } from './main/delta/time-sheet/time-sheet.module';
+//import { TimeSheetModule } from './main/delta/time-sheet/time-sheet.module';
 
 
 import { Demande_deboursComponent } from './main/delta/ddb/demande_debours/demande_debours.component';
 import { RegionComponent } from './main/delta/ddb/region/region.component';
 
-import { TimeSheetModule} from './main/delta/time-sheet/time-sheet.module';
+import { TimeSheetModule } from './main/delta/time-sheet/time-sheet.module';
 import { DocumentModule } from './main/delta/document/document.module';
 import { ChatModule } from './main/delta/chat/chat.module';
 import { AbsenceModule } from './main/delta/absence/absence.module';
-import { CongeModule  } from './main/delta/conge/conge.module';
+import { CongeModule } from './main/delta/conge/conge.module';
 import { ReportingTimesheetModule } from './main/delta/reporting-timesheet/reporting-timesheet.module';
 
 
@@ -79,8 +79,8 @@ const appRoutes: Routes = [
         AppComponent,
 
         AlertComponent,
-       
-       
+
+
         //AccueilComponent
 
         AlertComponent
